@@ -20,23 +20,44 @@ const config = {
     betStep: 5
 };
 
-// Symbol Configuration with RTP-balanced probabilities
+// Symbol Configuration with Display Info
 const symbols = {
-    '👑': { type: 'gold', weight: 18, payout: 0 },           // Altın (18%)
-    '💎': { type: 'diamond', weight: 15, payout: 0 },        // Pırlanta (15%)
-    '💰': { type: 'money', weight: 8, value: 20 },          // 20₺ (8%)
-    '💵': { type: 'money', weight: 6, value: 50 },          // 50₺ (6%)
-    '💸': { type: 'money', weight: 4, value: 100 },         // 100₺ (4%)
-    '🏆': { type: 'money', weight: 2, value: 250 },         // 250₺ (2%)
-    '✖️': { type: 'multiplier', weight: 5, value: 0.3 },    // 0.3x (5%)
-    '✨': { type: 'multiplier', weight: 4, value: 0.6 },    // 0.6x (4%)
-    '⭐': { type: 'multiplier', weight: 3, value: 1.2 },    // 1.2x (3%)
-    '🌟': { type: 'multiplier', weight: 2, value: 2.3 },    // 2.3x (2%)
-    '❌': { type: 'empty', weight: 33, payout: 0 }          // Boş (33%)
+    '😇': { 
+        type: 'gold', 
+        weight: 18, 
+        payout: 0,
+        title: 'Angel Power',
+        bgClass: 'angel-bg'
+    },
+    '😈': { 
+        type: 'diamond', 
+        weight: 15, 
+        payout: 0,
+        title: 'Demon Power',
+        bgClass: 'demon-bg'
+    },
+    '💰': { type: 'money', weight: 8, value: 20, title: 'Coins 20₺' },
+    '💵': { type: 'money', weight: 6, value: 50, title: 'Cash 50₺' },
+    '💸': { type: 'money', weight: 4, value: 100, title: 'Money 100₺' },
+    '🏆': { type: 'money', weight: 2, value: 250, title: 'Trophy 250₺' },
+    '⚡': { type: 'multiplier', weight: 5, value: 0.3, title: 'Zap 0.3x' },
+    '✨': { type: 'multiplier', weight: 4, value: 0.6, title: 'Sparkle 0.6x' },
+    '⭐': { type: 'multiplier', weight: 3, value: 1.2, title: 'Star 1.2x' },
+    '🌟': { type: 'multiplier', weight: 2, value: 2.3, title: 'Shining 2.3x' },
+    '❌': { type: 'empty', weight: 33, payout: 0, title: 'Try Again' }
 };
 
 // Total weight for probability calculation
 const totalWeight = Object.values(symbols).reduce((sum, symbol) => sum + symbol.weight, 0);
+
+// Flavor texts for variety
+const flavorTexts = [
+    "You discover buildings which must be demonic tombs. The gargantuan structures deeply humble you.",
+    "Ancient powers stir in the shadows. Your fate hangs in the balance.",
+    "The mystical wheel spins, weaving threads of destiny and fortune.",
+    "Celestial beings watch over your journey through this mythical realm.",
+    "The clash between light and darkness shapes your fortune today."
+];
 
 // DOM Elements
 const elements = {
@@ -44,7 +65,9 @@ const elements = {
     betInput: document.getElementById('bet-input'),
     currentBet: document.getElementById('current-bet'),
     spinButton: document.getElementById('spin-button'),
-    resultText: document.getElementById('result-text'),
+    mainIcon: document.getElementById('main-icon'),
+    mainTitle: document.getElementById('main-title'),
+    flavorMessage: document.getElementById('flavor-message'),
     totalWin: document.getElementById('total-win'),
     highestWin: document.getElementById('highest-win'),
     spinCount: document.getElementById('spin-count'),
@@ -63,11 +86,7 @@ const elements = {
         document.getElementById('diamond-slot-2'),
         document.getElementById('diamond-slot-3')
     ],
-    reels: [
-        document.getElementById('reel1'),
-        document.getElementById('reel2'),
-        document.getElementById('reel3')
-    ]
+    reelTrack: document.getElementById('reel-track')
 };
 
 // Initialize Game
@@ -75,21 +94,21 @@ function init() {
     updateDisplay();
     setupEventListeners();
     updateQuickBets();
+    setRandomFlavorText();
+    
+    // Set initial display
+    updateMainDisplay('😈', 'Demon Power', 'demon-bg');
 }
 
 // Setup Event Listeners
 function setupEventListeners() {
-    // Spin Button
     elements.spinButton.addEventListener('click', spin);
-
-    // Bet Controls
     document.getElementById('decrease-bet').addEventListener('click', () => adjustBet(-config.betStep));
     document.getElementById('increase-bet').addEventListener('click', () => adjustBet(config.betStep));
     elements.betInput.addEventListener('input', handleBetInput);
     elements.betInput.addEventListener('change', validateBet);
-
-    // Quick Bet Buttons
-    document.querySelectorAll('.quick-bet-btn').forEach(btn => {
+    
+    document.querySelectorAll('.quick-chip').forEach(btn => {
         btn.addEventListener('click', () => {
             const betAmount = parseInt(btn.dataset.bet);
             gameState.currentBet = betAmount;
@@ -98,9 +117,32 @@ function setupEventListeners() {
             updateQuickBets();
         });
     });
-
-    // Close Popup
+    
     elements.closePopup.addEventListener('click', closeWinPopup);
+    
+    // Arrow buttons (cosmetic)
+    document.querySelectorAll('.arrow-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = '', 100);
+        });
+    });
+}
+
+// Update Main Display
+function updateMainDisplay(icon, title, bgClass) {
+    const avatarLarge = document.querySelector('.power-avatar-large');
+    elements.mainIcon.textContent = icon;
+    elements.mainTitle.textContent = title;
+    
+    // Update background class
+    avatarLarge.className = 'power-avatar-large ' + bgClass;
+}
+
+// Set Random Flavor Text
+function setRandomFlavorText() {
+    const randomText = flavorTexts[Math.floor(Math.random() * flavorTexts.length)];
+    elements.flavorMessage.textContent = randomText;
 }
 
 // Adjust Bet
@@ -128,7 +170,7 @@ function validateBet() {
     } else if (elements.betInput.value > config.maxBet) {
         elements.betInput.value = config.maxBet;
     } else if (elements.betInput.value > gameState.balance) {
-        elements.betInput.value = gameState.balance;
+        elements.betInput.value = Math.min(gameState.balance, config.maxBet);
     }
     gameState.currentBet = parseInt(elements.betInput.value);
     updateDisplay();
@@ -137,7 +179,7 @@ function validateBet() {
 
 // Update Quick Bet Buttons
 function updateQuickBets() {
-    document.querySelectorAll('.quick-bet-btn').forEach(btn => {
+    document.querySelectorAll('.quick-chip').forEach(btn => {
         const betAmount = parseInt(btn.dataset.bet);
         btn.classList.toggle('active', betAmount === gameState.currentBet);
         btn.disabled = betAmount > gameState.balance;
@@ -156,28 +198,43 @@ function getRandomSymbol() {
         }
     }
     
-    return '❌'; // Fallback
+    return '❌';
 }
 
-// Spin Animation
-async function animateReel(reel, finalSymbol, duration) {
+// Animate Reel
+async function animateReel(finalSymbol, duration = 2000) {
     return new Promise(resolve => {
         const symbolKeys = Object.keys(symbols);
-        reel.classList.add('spinning');
+        elements.reelTrack.classList.add('spinning');
         
         let elapsed = 0;
         const interval = setInterval(() => {
             const randomSymbol = symbolKeys[Math.floor(Math.random() * symbolKeys.length)];
-            reel.querySelector('.symbol').textContent = randomSymbol;
+            const symbolConfig = symbols[randomSymbol];
             
-            elapsed += 50;
+            // Update main display during spin
+            updateMainDisplay(
+                randomSymbol, 
+                symbolConfig.title || 'Spinning...', 
+                symbolConfig.bgClass || 'demon-bg'
+            );
+            
+            elapsed += 100;
             if (elapsed >= duration) {
                 clearInterval(interval);
-                reel.classList.remove('spinning');
-                reel.querySelector('.symbol').textContent = finalSymbol;
+                elements.reelTrack.classList.remove('spinning');
+                
+                // Show final result
+                const finalConfig = symbols[finalSymbol];
+                updateMainDisplay(
+                    finalSymbol,
+                    finalConfig.title || 'Result',
+                    finalConfig.bgClass || 'demon-bg'
+                );
+                
                 resolve();
             }
-        }, 50);
+        }, 100);
     });
 }
 
@@ -185,9 +242,8 @@ async function animateReel(reel, finalSymbol, duration) {
 async function spin() {
     if (gameState.isSpinning) return;
     
-    // Check balance
     if (gameState.balance < gameState.currentBet) {
-        showResult('Yetersiz bakiye! 😞', 'error');
+        elements.flavorMessage.textContent = '⚠️ Yetersiz bakiye! Daha düşük bir bahis seçin.';
         return;
     }
     
@@ -200,21 +256,13 @@ async function spin() {
     gameState.spinCount++;
     updateDisplay();
     
-    showResult('Döndürülüyor... 🎰', 'spinning');
+    elements.flavorMessage.textContent = '🎰 Çark dönüyor... Şansın yaver gitsin!';
     
-    // Get random symbols
-    const result = [
-        getRandomSymbol(),
-        getRandomSymbol(),
-        getRandomSymbol()
-    ];
+    // Get random result
+    const result = getRandomSymbol();
     
-    // Animate reels
-    await Promise.all([
-        animateReel(elements.reels[0], result[0], 1000),
-        animateReel(elements.reels[1], result[1], 1500),
-        animateReel(elements.reels[2], result[2], 2000)
-    ]);
+    // Animate reel
+    await animateReel(result, 2000);
     
     // Calculate winnings
     await calculateWinnings(result);
@@ -223,63 +271,60 @@ async function spin() {
     elements.spinButton.disabled = false;
     elements.spinButton.classList.remove('spinning');
     updateDisplay();
+    setRandomFlavorText();
 }
 
 // Calculate Winnings
-async function calculateWinnings(result) {
+async function calculateWinnings(symbol) {
     let totalWin = 0;
-    let winMessages = [];
+    let winMessage = '';
     let hasSpecialWin = false;
     
-    // Check each symbol
-    for (const symbol of result) {
-        const symbolConfig = symbols[symbol];
-        
-        switch (symbolConfig.type) {
-            case 'gold':
-                gameState.goldSlots++;
-                updateProgressSlots('gold');
-                winMessages.push('Altın bulundu! 👑');
-                
-                if (gameState.goldSlots >= 3) {
-                    totalWin += config.goldReward;
-                    winMessages.push(`🎉 ALTIN HAZİNE KAZANILDI! ${config.goldReward}₺`);
-                    gameState.goldSlots = 0;
-                    resetProgressSlots('gold');
-                    hasSpecialWin = true;
-                }
-                break;
-                
-            case 'diamond':
-                gameState.diamondSlots++;
-                updateProgressSlots('diamond');
-                winMessages.push('Pırlanta bulundu! 💎');
-                
-                if (gameState.diamondSlots >= 3) {
-                    totalWin += config.diamondReward;
-                    winMessages.push(`🎉 PIRLANTA HAZİNE KAZANILDI! ${config.diamondReward}₺`);
-                    gameState.diamondSlots = 0;
-                    resetProgressSlots('diamond');
-                    hasSpecialWin = true;
-                }
-                break;
-                
-            case 'money':
-                const moneyWin = symbolConfig.value;
-                totalWin += moneyWin;
-                winMessages.push(`Para kazandınız: ${moneyWin}₺ 💵`);
-                break;
-                
-            case 'multiplier':
-                const multiplierWin = Math.floor(gameState.currentBet * symbolConfig.value);
-                totalWin += multiplierWin;
-                winMessages.push(`Çarpan: ${symbolConfig.value}x = ${multiplierWin}₺ ⭐`);
-                break;
-                
-            case 'empty':
-                // No win
-                break;
-        }
+    const symbolConfig = symbols[symbol];
+    
+    switch (symbolConfig.type) {
+        case 'gold':
+            gameState.goldSlots++;
+            updateProgressSlots('gold');
+            winMessage = '👑 Altın bulundu! Angel Power artıyor...';
+            
+            if (gameState.goldSlots >= 3) {
+                totalWin += config.goldReward;
+                winMessage = `🎊 ANGEL POWER TAMAMLANDI! ${config.goldReward}₺ Kazandınız!`;
+                gameState.goldSlots = 0;
+                resetProgressSlots('gold');
+                hasSpecialWin = true;
+            }
+            break;
+            
+        case 'diamond':
+            gameState.diamondSlots++;
+            updateProgressSlots('diamond');
+            winMessage = '💎 Pırlanta bulundu! Demon Power artıyor...';
+            
+            if (gameState.diamondSlots >= 3) {
+                totalWin += config.diamondReward;
+                winMessage = `🔥 DEMON POWER TAMAMLANDI! ${config.diamondReward}₺ Kazandınız!`;
+                gameState.diamondSlots = 0;
+                resetProgressSlots('diamond');
+                hasSpecialWin = true;
+            }
+            break;
+            
+        case 'money':
+            totalWin += symbolConfig.value;
+            winMessage = `💰 ${symbolConfig.value}₺ Kazandınız!`;
+            break;
+            
+        case 'multiplier':
+            const multiplierWin = Math.floor(gameState.currentBet * symbolConfig.value);
+            totalWin += multiplierWin;
+            winMessage = `⚡ Çarpan ${symbolConfig.value}x! ${multiplierWin}₺ Kazandınız!`;
+            break;
+            
+        case 'empty':
+            winMessage = '❌ Bu sefer olmadı! Tekrar deneyin.';
+            break;
     }
     
     // Update balance and stats
@@ -293,14 +338,12 @@ async function calculateWinnings(result) {
         
         // Show win popup for significant wins
         if (hasSpecialWin || totalWin >= gameState.currentBet * 2) {
-            showWinPopup(totalWin, hasSpecialWin);
-        } else {
-            showResult(winMessages.join(' | '), 'win');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            showWinPopup(totalWin, hasSpecialWin, symbol);
         }
-    } else {
-        showResult('Tekrar deneyin! 🎲', 'loss');
     }
     
+    elements.flavorMessage.textContent = winMessage;
     updateDisplay();
 }
 
@@ -308,53 +351,41 @@ async function calculateWinnings(result) {
 function updateProgressSlots(type) {
     const slots = type === 'gold' ? elements.goldSlots : elements.diamondSlots;
     const count = type === 'gold' ? gameState.goldSlots : gameState.diamondSlots;
-    const icon = type === 'gold' ? '👑' : '💎';
+    const icon = type === 'gold' ? '😇' : '😈';
     
     if (count > 0 && count <= 3) {
         const slot = slots[count - 1];
-        slot.classList.add('filled', `${type}-slot`);
-        slot.querySelector('.slot-icon').textContent = icon;
-        slot.querySelector('.slot-icon').style.filter = 'none';
-        slot.querySelector('.slot-icon').style.opacity = '1';
+        slot.classList.remove('locked');
+        slot.classList.add('filled');
+        slot.querySelector('.mini-icon').textContent = icon;
     }
 }
 
 // Reset Progress Slots
 function resetProgressSlots(type) {
     const slots = type === 'gold' ? elements.goldSlots : elements.diamondSlots;
+    const defaultIcon = type === 'gold' ? '😇' : '😈';
     
     setTimeout(() => {
-        slots.forEach(slot => {
+        slots.forEach((slot, index) => {
             slot.classList.remove('filled');
-            slot.querySelector('.slot-icon').textContent = '🔒';
-            slot.querySelector('.slot-icon').style.filter = 'grayscale(100%)';
-            slot.querySelector('.slot-icon').style.opacity = '0.5';
+            if (index > 0) {
+                slot.classList.add('locked');
+                slot.querySelector('.mini-icon').textContent = '⚪';
+            } else {
+                slot.querySelector('.mini-icon').textContent = defaultIcon;
+            }
         });
-    }, 2000);
-}
-
-// Show Result Message
-function showResult(message, type) {
-    elements.resultText.textContent = message;
-    
-    // Color based on type
-    const colors = {
-        win: '#4CAF50',
-        loss: '#f44336',
-        spinning: '#ffd700',
-        error: '#ff9800'
-    };
-    
-    elements.resultText.style.color = colors[type] || '#ffd700';
+    }, 3000);
 }
 
 // Show Win Popup
-function showWinPopup(amount, isSpecial) {
+function showWinPopup(amount, isSpecial, symbol) {
     elements.winAmount.textContent = `${amount}₺`;
     
     if (isSpecial) {
-        elements.winIcon.textContent = '🏆';
-        elements.winMessage.textContent = 'HAZİNE KAZANILDI!';
+        elements.winIcon.textContent = symbol;
+        elements.winMessage.textContent = 'POWER COMPLETED!';
     } else if (amount >= gameState.currentBet * 5) {
         elements.winIcon.textContent = '🎊';
         elements.winMessage.textContent = 'BÜYÜK KAZANÇ!';
@@ -364,8 +395,6 @@ function showWinPopup(amount, isSpecial) {
     }
     
     elements.winPopup.classList.add('show');
-    
-    // Play celebration animation
     confetti();
 }
 
@@ -374,58 +403,43 @@ function closeWinPopup() {
     elements.winPopup.classList.remove('show');
 }
 
-// Simple Confetti Effect
+// Confetti Effect
 function confetti() {
-    const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24'];
-    const confettiCount = 50;
+    const colors = ['#FFD700', '#FFA500', '#FF6B6B', '#4FC3F7', '#F9CA24'];
+    const confettiCount = 60;
     
     for (let i = 0; i < confettiCount; i++) {
         setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.style.position = 'fixed';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.top = '-10px';
-            confetti.style.width = '10px';
-            confetti.style.height = '10px';
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.borderRadius = '50%';
-            confetti.style.pointerEvents = 'none';
-            confetti.style.zIndex = '9999';
-            confetti.style.animation = `fall ${2 + Math.random() * 2}s linear`;
+            const particle = document.createElement('div');
+            particle.style.position = 'fixed';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = '-10px';
+            particle.style.width = (8 + Math.random() * 8) + 'px';
+            particle.style.height = (8 + Math.random() * 8) + 'px';
+            particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '9999';
+            particle.style.animation = `fall ${2 + Math.random() * 2}s linear`;
             
-            document.body.appendChild(confetti);
-            
-            setTimeout(() => confetti.remove(), 4000);
-        }, i * 30);
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 4000);
+        }, i * 20);
     }
 }
 
-// Add fall animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fall {
-        to {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
 // Update Display
 function updateDisplay() {
-    elements.balance.textContent = gameState.balance.toFixed(2) + '₺';
+    elements.balance.textContent = Math.floor(gameState.balance) + '₺';
     elements.currentBet.textContent = gameState.currentBet + '₺';
-    elements.totalWin.textContent = gameState.totalWin.toFixed(2) + '₺';
-    elements.highestWin.textContent = gameState.highestWin.toFixed(2) + '₺';
+    elements.totalWin.textContent = Math.floor(gameState.totalWin) + '₺';
+    elements.highestWin.textContent = Math.floor(gameState.highestWin) + '₺';
     elements.spinCount.textContent = gameState.spinCount;
     
-    // Update button state
     elements.spinButton.disabled = gameState.balance < gameState.currentBet || gameState.isSpinning;
     
-    // Check if game over
     if (gameState.balance < config.minBet && !gameState.isSpinning) {
-        showResult('Oyun Bitti! Bakiye yetersiz. 😢', 'error');
+        elements.flavorMessage.textContent = '💔 Bakiyeniz bitti! Oyun sona erdi.';
         setTimeout(() => {
             if (confirm('Bakiyeniz bitti! Yeniden başlamak ister misiniz?')) {
                 resetGame();
@@ -450,32 +464,9 @@ function resetGame() {
     resetProgressSlots('diamond');
     
     updateDisplay();
-    showResult('Yeni oyun başladı! İyi şanslar! 🍀', 'win');
+    setRandomFlavorText();
+    updateMainDisplay('😈', 'Demon Power', 'demon-bg');
 }
-
-// Calculate Actual RTP (for monitoring)
-function calculateActualRTP() {
-    if (gameState.spinCount === 0) return 0;
-    const totalWagered = gameState.spinCount * gameState.currentBet;
-    return (gameState.totalWin / totalWagered) * 100;
-}
-
-// Log RTP every 10 spins (for development)
-setInterval(() => {
-    if (gameState.spinCount > 0 && gameState.spinCount % 10 === 0) {
-        console.log(`Spin Count: ${gameState.spinCount}`);
-        console.log(`Actual RTP: ${calculateActualRTP().toFixed(2)}%`);
-        console.log(`Target RTP: ${config.targetRTP * 100}%`);
-    }
-}, 1000);
 
 // Initialize on load
 window.addEventListener('DOMContentLoaded', init);
-
-// Prevent reload warning
-window.addEventListener('beforeunload', (e) => {
-    if (gameState.spinCount > 0) {
-        e.preventDefault();
-        e.returnValue = '';
-    }
-});
