@@ -118,13 +118,17 @@ body {
 /* Title Banner */
 .title-banner {
     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    padding: 10px 15px;
+    padding: 15px 10px;
     border-radius: 18px;
     text-align: center;
     position: relative;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(255, 165, 0, 0.4);
     border: 3px solid #FF8C00;
+    min-height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .banner-shine {
@@ -147,16 +151,17 @@ body {
 
 .game-title {
     font-family: 'Lilita One', cursive;
-    font-size: 32px;
+    font-size: 36px;
     color: white;
     text-shadow: 
         3px 3px 0px #CC8800,
         -1px -1px 0px #FFE55C,
         0 2px 8px rgba(0, 0, 0, 0.3);
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     position: relative;
     z-index: 1;
-    line-height: 1;
+    line-height: 1.2;
+    word-spacing: 0.2em;
 }
 
 /* Top Rewards Display */
@@ -272,15 +277,15 @@ body {
 .wheel-container {
     position: relative;
     width: 100%;
-    aspect-ratio: 1;
     max-width: 320px;
     margin: 0 auto;
+    height: 280px;
 }
 
 /* Result Window */
 .result-window {
     position: absolute;
-    top: 15%;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
@@ -319,72 +324,170 @@ body {
     flex: 1;
 }
 
-/* Spinning Wheel */
+/* 3D Cylinder Reel */
 .spinning-wheel {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 180px;
+    perspective: 1000px;
+}
+
+.wheel-reel {
+    position: relative;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    transform-style: preserve-3d;
+    animation: drumIdle 3s ease-in-out infinite;
+}
+
+.wheel-reel.spinning {
+    animation: drumSpin 0.1s linear infinite;
+}
+
+@keyframes drumIdle {
+    0%, 100% { transform: rotateX(0deg); }
+    50% { transform: rotateX(2deg); }
+}
+
+@keyframes drumSpin {
+    from { transform: rotateX(0deg); }
+    to { transform: rotateX(360deg); }
+}
+
+/* Reel Container with 3D Effect */
+.reel-container {
     position: relative;
-    background: conic-gradient(
-        from 0deg,
-        #FF6B6B 0deg 30deg,
-        #4FC3F7 30deg 60deg,
-        #FFD700 60deg 90deg,
-        #9C27B0 90deg 120deg,
-        #4CAF50 120deg 150deg,
-        #FF9800 150deg 180deg,
-        #E91E63 180deg 210deg,
-        #2196F3 210deg 240deg,
-        #FFC107 240deg 270deg,
-        #757575 270deg 300deg,
-        #FF5722 300deg 330deg,
-        #87CEEB 330deg 360deg
-    );
-    border: 8px solid rgba(255, 215, 0, 0.6);
+    width: 200px;
+    height: 180px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, 
+        rgba(0,0,0,0.3) 0%, 
+        transparent 10%, 
+        transparent 90%, 
+        rgba(0,0,0,0.3) 100%);
+    border-radius: 15px;
+    overflow: hidden;
     box-shadow: 
-        0 0 30px rgba(255, 215, 0, 0.4),
-        inset 0 0 20px rgba(0, 0, 0, 0.3);
-    transition: transform 2s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        inset 0 10px 20px rgba(0, 0, 0, 0.4),
+        inset 0 -10px 20px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(255, 215, 0, 0.3);
+    border: 4px solid rgba(255, 215, 0, 0.4);
 }
 
-.spinning-wheel.spinning {
-    animation: wheelSpin 0.5s linear infinite;
-}
-
-@keyframes wheelSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* Wheel Center */
-.wheel-center {
+/* Reel Strip */
+.reel-strip {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
+    width: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    animation: reelIdle 2s ease-in-out infinite;
+}
+
+.reel-strip.spinning {
+    animation: reelSpin 0.1s linear infinite;
+}
+
+@keyframes reelIdle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
+
+@keyframes reelSpin {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100%); }
+}
+
+/* Reel Symbol Segments */
+.reel-segment {
+    width: 100%;
     height: 60px;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border-radius: 50%;
-    border: 4px solid white;
-    box-shadow: 
-        0 4px 15px rgba(0, 0, 0, 0.4),
-        inset 0 2px 6px rgba(255, 255, 255, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 48px;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 50%, 
+        rgba(0, 0, 0, 0.1) 100%);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.reel-segment::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+        rgba(0, 0, 0, 0.3) 0%,
+        transparent 10%,
+        transparent 90%,
+        rgba(0, 0, 0, 0.3) 100%);
+    pointer-events: none;
+}
+
+.reel-segment:nth-child(1) { background-color: rgba(255, 107, 107, 0.3); }
+.reel-segment:nth-child(2) { background-color: rgba(79, 195, 247, 0.3); }
+.reel-segment:nth-child(3) { background-color: rgba(255, 215, 0, 0.3); }
+.reel-segment:nth-child(4) { background-color: rgba(156, 39, 176, 0.3); }
+.reel-segment:nth-child(5) { background-color: rgba(76, 175, 80, 0.3); }
+.reel-segment:nth-child(6) { background-color: rgba(255, 152, 0, 0.3); }
+
+/* Highlight Line (Center) */
+.reel-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 60px;
+    transform: translateY(-50%);
+    border-top: 3px solid rgba(255, 215, 0, 0.8);
+    border-bottom: 3px solid rgba(255, 215, 0, 0.8);
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 215, 0, 0.1) 50%,
+        transparent 100%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Wheel Frame Decoration */
+.wheel-frame-deco {
+    position: absolute;
+    top: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 200px;
+    border: 6px solid #D4A574;
+    border-radius: 20px;
+    pointer-events: none;
+    box-shadow: 
+        inset 0 0 20px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(212, 165, 116, 0.3);
+}
+
+/* Center Pointer */
+.wheel-center {
+    position: absolute;
+    top: 50%;
+    right: -15px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid #FFD700;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4));
+    z-index: 10;
 }
 
 .wheel-pointer {
-    font-size: 28px;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    animation: pointerPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pointerPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    display: none;
 }
 
 /* Bet Button Main - CLICKABLE */
