@@ -128,6 +128,62 @@ function updateResultDisplay(icon, text) {
     elements.resultText.textContent = text;
 }
 
+// Adjust Bet
+function adjustBet(amount) {
+    const newBet = gameState.currentBet + amount;
+    if (newBet >= config.minBet && newBet <= config.maxBet && newBet <= gameState.balance) {
+        gameState.currentBet = newBet;
+        elements.betInput.value = newBet;
+        updateDisplay();
+        updateQuickBets();
+    }
+}
+
+// Handle Bet Input
+function handleBetInput(e) {
+    const value = parseInt(e.target.value) || config.minBet;
+    gameState.currentBet = Math.max(config.minBet, Math.min(value, config.maxBet, gameState.balance));
+    updateQuickBets();
+}
+
+// Validate Bet
+function validateBet() {
+    if (elements.betInput.value < config.minBet) {
+        elements.betInput.value = config.minBet;
+    } else if (elements.betInput.value > config.maxBet) {
+        elements.betInput.value = config.maxBet;
+    } else if (elements.betInput.value > gameState.balance) {
+        elements.betInput.value = Math.min(gameState.balance, config.maxBet);
+    }
+    gameState.currentBet = parseInt(elements.betInput.value);
+    updateDisplay();
+    updateQuickBets();
+}
+
+// Update Quick Bet Buttons
+function updateQuickBets() {
+    document.querySelectorAll('.quick-bet').forEach(btn => {
+        const betAmount = parseInt(btn.dataset.bet);
+        btn.classList.toggle('active', betAmount === gameState.currentBet);
+        btn.disabled = betAmount > gameState.balance;
+    });
+}
+
+// Get Random Symbol
+function getRandomSymbol() {
+    const random = Math.random() * totalWeight;
+    let cumulativeWeight = 0;
+    
+    for (const [symbol, config] of Object.entries(symbols)) {
+        cumulativeWeight += config.weight;
+        if (random < cumulativeWeight) {
+            return symbol;
+        }
+    }
+    
+    return '❌';
+}
+
 // Animate Reel Spin (3D Cylinder)
 async function animateReelSpin(finalResult, duration = 2500) {
     return new Promise(resolve => {
