@@ -3,132 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mythical Skill - Casino Oyunu</title>
+    <title>Mythical Skill - Şans Oyunu</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="game-container">
-        <!-- Header -->
-        <div class="header">
-            <div class="balance-info">
-                <span class="balance-label">Bakiye:</span>
-                <span class="balance-amount" id="balance">1000.00₺</span>
+    <!-- Background Effects -->
+    <div class="bg-mountains"></div>
+    <div class="bg-clouds"></div>
+    
+    <div class="game-wrapper">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <button class="settings-btn">⚙️</button>
+            <div class="day-counter">
+                <span class="day-icon">☀️</span>
+                <span class="day-text">Day 1</span>
             </div>
-            <h1 class="game-title">⚡ Mythical Skill ⚡</h1>
-            <div class="settings-icon">⚙️</div>
-        </div>
-
-        <!-- Reward Slots -->
-        <div class="reward-section">
-            <!-- Gold Slots -->
-            <div class="reward-box gold-box">
-                <div class="reward-header">
-                    <span class="reward-icon">👑</span>
-                    <span class="reward-title">Altın Hazine</span>
-                </div>
-                <div class="slots-container">
-                    <div class="slot gold-slot" id="gold-slot-1">
-                        <span class="slot-icon">🔒</span>
-                    </div>
-                    <div class="slot gold-slot" id="gold-slot-2">
-                        <span class="slot-icon">🔒</span>
-                    </div>
-                    <div class="slot gold-slot" id="gold-slot-3">
-                        <span class="slot-icon">🔒</span>
-                    </div>
-                </div>
-                <div class="reward-value">500₺</div>
-            </div>
-
-            <!-- Diamond Slots -->
-            <div class="reward-box diamond-box">
-                <div class="reward-header">
-                    <span class="reward-icon">💎</span>
-                    <span class="reward-title">Pırlanta Hazine</span>
-                </div>
-                <div class="slots-container">
-                    <div class="slot diamond-slot" id="diamond-slot-1">
-                        <span class="slot-icon">🔒</span>
-                    </div>
-                    <div class="slot diamond-slot" id="diamond-slot-2">
-                        <span class="slot-icon">🔒</span>
-                    </div>
-                    <div class="slot diamond-slot" id="diamond-slot-3">
-                        <span class="slot-icon">🔒</span>
-                    </div>
-                </div>
-                <div class="reward-value">750₺</div>
+            <div class="top-progress">
+                <div class="progress-icon">🏆</div>
+                <div class="progress-icon">🎯</div>
+                <div class="progress-icon">⭐</div>
+                <div class="progress-icon locked">🔒</div>
             </div>
         </div>
 
-        <!-- Slot Machine -->
-        <div class="slot-machine">
-            <div class="machine-frame">
-                <div class="machine-header">
-                    <span class="machine-light">🌟</span>
-                    <span class="machine-text">ŞANSINI DENE</span>
-                    <span class="machine-light">🌟</span>
-                </div>
-                
-                <div class="reel-container">
-                    <div class="reel" id="reel1">
-                        <div class="symbol">👑</div>
+        <!-- Main Game Container -->
+        <div class="game-container">
+            <!-- Mythical Skill Title Banner -->
+            <div class="title-banner">
+                <div class="banner-shine"></div>
+                <h1 class="game-title">Mythical Skill</h1>
+            </div>
+
+            <!-- Top Rewards Display -->
+            <div class="rewards-top">
+                <!-- Angel Power (Gold) -->
+                <div class="power-box angel-power">
+                    <div class="power-avatar">
+                        <div class="avatar-circle angel-bg">
+                            <span class="avatar-icon">😇</span>
+                        </div>
+                        <span class="power-name">Angel Power</span>
                     </div>
-                    <div class="reel" id="reel2">
-                        <div class="symbol">💎</div>
-                    </div>
-                    <div class="reel" id="reel3">
-                        <div class="symbol">💰</div>
+                    <div class="power-slots">
+                        <div class="mini-slot" id="gold-slot-1">
+                            <span class="mini-icon">😇</span>
+                        </div>
+                        <div class="mini-slot locked" id="gold-slot-2">
+                            <span class="mini-icon">⚪</span>
+                        </div>
+                        <div class="mini-slot locked" id="gold-slot-3">
+                            <span class="mini-icon">⚪</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="result-display" id="result-display">
-                    <span id="result-text">Döndür ve Kazan!</span>
-                </div>
-
-                <div class="spins-info">
-                    <span id="spins-text">Bahis: <span id="current-bet">25₺</span></span>
+                <!-- Spawn of Evil (Diamond) -->
+                <div class="power-box spawn-power">
+                    <div class="power-avatar">
+                        <div class="avatar-circle demon-bg">
+                            <span class="avatar-icon">😈</span>
+                        </div>
+                        <span class="power-name">Spawn of Evil</span>
+                    </div>
+                    <div class="power-slots">
+                        <div class="mini-slot" id="diamond-slot-1">
+                            <span class="mini-icon">😈</span>
+                        </div>
+                        <div class="mini-slot locked" id="diamond-slot-2">
+                            <span class="mini-icon">⚪</span>
+                        </div>
+                        <div class="mini-slot locked" id="diamond-slot-3">
+                            <span class="mini-icon">⚪</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Bet Controls -->
-        <div class="controls">
-            <div class="bet-controls">
-                <label for="bet-input">Bahis Miktarı:</label>
-                <div class="bet-input-container">
-                    <button class="bet-btn" id="decrease-bet">-</button>
+            <!-- Slot Machine Body -->
+            <div class="slot-machine-body">
+                <!-- Machine Frame -->
+                <div class="machine-frame">
+                    <!-- Left Arrow -->
+                    <button class="arrow-btn left-arrow">◀</button>
+
+                    <!-- Display Window -->
+                    <div class="display-window">
+                        <!-- Current Result Display -->
+                        <div class="current-power">
+                            <div class="power-display">
+                                <div class="power-avatar-large">
+                                    <span class="avatar-large-icon" id="main-icon">😈</span>
+                                </div>
+                                <div class="power-title" id="main-title">Demon Power</div>
+                            </div>
+                        </div>
+
+                        <!-- Spinning Reel -->
+                        <div class="reel-display">
+                            <div class="reel-track" id="reel-track">
+                                <div class="reel-symbol">😇</div>
+                                <div class="reel-symbol">😈</div>
+                                <div class="reel-symbol">💰</div>
+                                <div class="reel-symbol">💵</div>
+                                <div class="reel-symbol">💸</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Arrow -->
+                    <button class="arrow-btn right-arrow">▶</button>
+                </div>
+
+                <!-- Bottom Info Bar -->
+                <div class="bottom-info">
+                    <div class="spins-left">
+                        <span class="info-label">Bahis:</span>
+                        <span class="info-value" id="current-bet">25₺</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flavor Text -->
+            <div class="flavor-text">
+                <p id="flavor-message">You discover buildings which must be demonic tombs. The gargantuan structures deeply humble you.</p>
+            </div>
+
+            <!-- Balance Display -->
+            <div class="balance-display">
+                <span class="balance-label">💰 Bakiye:</span>
+                <span class="balance-amount" id="balance">1000₺</span>
+            </div>
+
+            <!-- Bet Controls -->
+            <div class="bet-section">
+                <div class="bet-controls-inline">
+                    <button class="bet-btn-small" id="decrease-bet">-</button>
                     <input type="number" id="bet-input" value="25" min="10" max="500" step="5">
-                    <button class="bet-btn" id="increase-bet">+</button>
+                    <button class="bet-btn-small" id="increase-bet">+</button>
                 </div>
-                <div class="quick-bets">
-                    <button class="quick-bet-btn" data-bet="10">10₺</button>
-                    <button class="quick-bet-btn" data-bet="25">25₺</button>
-                    <button class="quick-bet-btn" data-bet="50">50₺</button>
-                    <button class="quick-bet-btn" data-bet="100">100₺</button>
+                <div class="quick-bets-row">
+                    <button class="quick-chip" data-bet="10">10₺</button>
+                    <button class="quick-chip" data-bet="25">25₺</button>
+                    <button class="quick-chip" data-bet="50">50₺</button>
+                    <button class="quick-chip" data-bet="100">100₺</button>
                 </div>
             </div>
 
-            <button class="spin-button" id="spin-button">
-                <span class="spin-text">DÖNDÜR</span>
-                <span class="spin-icon">🎰</span>
+            <!-- Spin Button -->
+            <button class="spin-btn-large" id="spin-button">
+                <span class="spin-btn-text">Spin</span>
             </button>
+
+            <!-- Stats Footer -->
+            <div class="stats-footer">
+                <div class="stat-box">
+                    <span class="stat-label">Toplam:</span>
+                    <span class="stat-value" id="total-win">0₺</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">En Yüksek:</span>
+                    <span class="stat-value" id="highest-win">0₺</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Spin:</span>
+                    <span class="stat-value" id="spin-count">0</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Game Stats -->
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-label">Toplam Kazanç:</span>
-                <span class="stat-value" id="total-win">0₺</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">En Yüksek:</span>
-                <span class="stat-value" id="highest-win">0₺</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Döndürme:</span>
-                <span class="stat-value" id="spin-count">0</span>
-            </div>
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-btn">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-btn active">
+                <span class="nav-icon">🎰</span>
+                <span class="nav-label">Spin</span>
+            </button>
+            <button class="nav-btn">
+                <span class="nav-icon">💎</span>
+                <span class="nav-label">Shop</span>
+            </button>
         </div>
     </div>
 
