@@ -118,7 +118,7 @@ body {
 /* Title Banner */
 .title-banner {
     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    padding: 12px;
+    padding: 10px 15px;
     border-radius: 18px;
     text-align: center;
     position: relative;
@@ -146,15 +146,17 @@ body {
 }
 
 .game-title {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 28px;
+    font-family: 'Lilita One', cursive;
+    font-size: 32px;
     color: white;
     text-shadow: 
         3px 3px 0px #CC8800,
-        -1px -1px 0px #FFE55C;
-    letter-spacing: 2px;
+        -1px -1px 0px #FFE55C,
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: 3px;
     position: relative;
     z-index: 1;
+    line-height: 1;
 }
 
 /* Top Rewards Display */
@@ -251,7 +253,7 @@ body {
     font-size: 16px;
 }
 
-/* Slot Machine Body - KOMPAKT */
+/* Slot Machine Body */
 .slot-machine-body {
     background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
     border-radius: 20px;
@@ -266,164 +268,217 @@ body {
     position: relative;
 }
 
-.display-window {
-    background: linear-gradient(135deg, #2a2a4e 0%, #1f1f3a 100%);
-    border-radius: 18px;
-    padding: 20px;
-    border: 4px solid rgba(255, 215, 0, 0.3);
-    box-shadow: 
-        inset 0 4px 12px rgba(0, 0, 0, 0.5),
-        0 0 25px rgba(255, 215, 0, 0.2);
+/* Wheel Container */
+.wheel-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+/* Result Window */
+.result-window {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 85%;
+}
+
+.result-badge {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,240,255,0.95) 100%);
+    border: 4px solid rgba(255, 215, 0, 0.8);
+    border-radius: 20px;
+    padding: 12px 20px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 12px;
-    min-height: 200px;
-    justify-content: center;
-}
-
-/* Result Circle - BÜYÜK VE NET */
-.result-circle {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
-    border: 5px solid white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     box-shadow: 
-        0 8px 20px rgba(0, 0, 0, 0.4),
-        0 0 30px rgba(255, 107, 107, 0.3);
-    animation: resultFloat 3s ease-in-out infinite;
-    position: relative;
-}
-
-.result-circle::before {
-    content: '';
-    position: absolute;
-    inset: -10px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes resultFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+        0 6px 20px rgba(0, 0, 0, 0.3),
+        inset 0 2px 8px rgba(255, 255, 255, 0.5);
 }
 
 .result-icon {
-    font-size: 70px;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
-    position: relative;
-    z-index: 1;
+    font-size: 48px;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
+    animation: iconBounce 2s ease-in-out infinite;
 }
 
-/* Result Text Display */
-.result-text-display {
-    text-align: center;
+@keyframes iconBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
-.result-title {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 22px;
-    color: #FFD700;
-    text-shadow: 
-        2px 2px 0px #CC8800,
-        0 0 15px rgba(255, 215, 0, 0.6);
-    margin-bottom: 4px;
-}
-
-.result-subtitle {
-    font-size: 14px;
-    color: #9999cc;
-    font-weight: 600;
-}
-
-/* Spinning Animation */
-.result-circle.spinning {
-    animation: spinRotate 0.5s linear infinite, resultFloat 3s ease-in-out infinite;
-}
-
-@keyframes spinRotate {
-    from { transform: rotate(0deg) scale(1.05); }
-    to { transform: rotate(360deg) scale(1.05); }
-}
-
-/* Bottom Info */
-.bottom-info {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    padding: 10px 15px;
-    border-radius: 12px;
-    margin-top: 12px;
-    border: 3px solid #FF8C00;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.bet-info-display {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-.info-label {
-    font-size: 15px;
-    font-weight: 700;
+.result-text {
+    font-family: 'Lilita One', cursive;
+    font-size: 20px;
     color: #5a4a3a;
+    text-shadow: 1px 1px 0px rgba(255, 215, 0, 0.3);
+    flex: 1;
 }
 
-.info-value {
-    font-size: 18px;
-    font-weight: 700;
+/* Spinning Wheel */
+.spinning-wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    background: conic-gradient(
+        from 0deg,
+        #FF6B6B 0deg 30deg,
+        #4FC3F7 30deg 60deg,
+        #FFD700 60deg 90deg,
+        #9C27B0 90deg 120deg,
+        #4CAF50 120deg 150deg,
+        #FF9800 150deg 180deg,
+        #E91E63 180deg 210deg,
+        #2196F3 210deg 240deg,
+        #FFC107 240deg 270deg,
+        #757575 270deg 300deg,
+        #FF5722 300deg 330deg,
+        #87CEEB 330deg 360deg
+    );
+    border: 8px solid rgba(255, 215, 0, 0.6);
+    box-shadow: 
+        0 0 30px rgba(255, 215, 0, 0.4),
+        inset 0 0 20px rgba(0, 0, 0, 0.3);
+    transition: transform 2s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+.spinning-wheel.spinning {
+    animation: wheelSpin 0.5s linear infinite;
+}
+
+@keyframes wheelSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Wheel Center */
+.wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.4),
+        inset 0 2px 6px rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wheel-pointer {
+    font-size: 28px;
     color: white;
-    text-shadow: 2px 2px 0px #CC8800;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    animation: pointerPulse 1.5s ease-in-out infinite;
 }
 
-/* Bet Section - COMPACT */
-.bet-section-compact {
-    margin: 5px 0;
+@keyframes pointerPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
 }
 
-.bet-row {
+/* Bet Button Main - CLICKABLE */
+.bet-button-main {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-top: 12px;
+    border: 4px solid #FF8C00;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 
+        0 6px 0 #CC8800,
+        0 8px 20px rgba(0, 0, 0, 0.4);
+    width: 100%;
+}
+
+.bet-button-main:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 9px 0 #CC8800,
+        0 11px 25px rgba(0, 0, 0, 0.5);
+}
+
+.bet-button-main:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 
+        0 4px 0 #CC8800,
+        0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.bet-button-main:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bet-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.bet-label {
+    font-family: 'Lilita One', cursive;
+    font-size: 22px;
+    color: #5a4a3a;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+}
+
+.bet-value {
+    font-family: 'Lilita One', cursive;
+    font-size: 28px;
+    color: white;
+    text-shadow: 
+        3px 3px 0px #CC8800,
+        0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+/* Bet Controls Inline */
+.bet-controls-inline {
     display: flex;
     gap: 6px;
     align-items: center;
+    margin: 8px 0;
 }
 
-.bet-btn-mini {
+.bet-adjust-btn {
     width: 42px;
     height: 42px;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border: 3px solid #FF8C00;
+    background: linear-gradient(135deg, #F5E6D3 0%, #E8D4B8 100%);
+    border: 3px solid #D4A574;
     border-radius: 10px;
     font-size: 24px;
     font-weight: bold;
-    color: white;
+    color: #5a4a3a;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     flex-shrink: 0;
 }
 
-.bet-btn-mini:active {
+.bet-adjust-btn:active {
     transform: scale(0.95);
 }
 
 #bet-input {
-    width: 70px;
+    width: 65px;
     height: 42px;
     background: white;
     border: 3px solid #D4A574;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     text-align: center;
     color: #5a4a3a;
@@ -436,14 +491,14 @@ body {
     border-color: #FFD700;
 }
 
-.quick-chip-mini {
+.quick-bet {
     flex: 1;
     height: 42px;
-    padding: 0 8px;
+    padding: 0;
     background: linear-gradient(135deg, #F5E6D3 0%, #E8D4B8 100%);
     border: 3px solid #D4A574;
     border-radius: 10px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: #5a4a3a;
     cursor: pointer;
@@ -451,74 +506,25 @@ body {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
-.quick-chip-mini:hover {
+.quick-bet:hover {
     transform: translateY(-2px);
 }
 
-.quick-chip-mini.active {
+.quick-bet.active {
     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
     border-color: #FF8C00;
     color: white;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Spin Button - PROMINENT */
-.spin-btn-main {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border: none;
-    border-radius: 18px;
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 32px;
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 
-        0 6px 0 #CC8800,
-        0 8px 20px rgba(0, 0, 0, 0.4);
-    text-shadow: 3px 3px 0px #CC8800;
-    letter-spacing: 3px;
-    border: 4px solid #FF8C00;
-    margin: 8px 0;
-}
-
-.spin-btn-main:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 
-        0 9px 0 #CC8800,
-        0 11px 25px rgba(0, 0, 0, 0.5);
-}
-
-.spin-btn-main:active:not(:disabled) {
-    transform: translateY(2px);
-    box-shadow: 
-        0 4px 0 #CC8800,
-        0 6px 15px rgba(0, 0, 0, 0.3);
-}
-
-.spin-btn-main:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.spin-btn-main.spinning {
-    animation: btnPulse 0.6s ease-in-out infinite;
-}
-
-@keyframes btnPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.03); }
-}
-
-/* Stats - COMPACT */
-.stats-compact {
+/* Stats Row */
+.stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
 }
 
-.stat-mini {
+.stat-item {
     background: linear-gradient(135deg, #F5E6D3 0%, #E8D4B8 100%);
     padding: 8px;
     border-radius: 10px;
@@ -527,7 +533,7 @@ body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.stat-mini-label {
+.stat-label {
     display: block;
     font-size: 10px;
     color: #5a4a3a;
@@ -536,7 +542,7 @@ body {
     text-transform: uppercase;
 }
 
-.stat-mini-value {
+.stat-value {
     display: block;
     font-size: 14px;
     font-weight: 700;
@@ -598,7 +604,7 @@ body {
 }
 
 .win-message {
-    font-family: 'Luckiest Guy', cursive;
+    font-family: 'Lilita One', cursive;
     font-size: 28px;
     color: white;
     margin-bottom: 12px;
@@ -609,7 +615,7 @@ body {
 }
 
 .win-amount {
-    font-family: 'Luckiest Guy', cursive;
+    font-family: 'Lilita One', cursive;
     font-size: 48px;
     color: #FFD700;
     margin-bottom: 25px;
@@ -629,7 +635,7 @@ body {
     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
     border: none;
     border-radius: 12px;
-    font-family: 'Luckiest Guy', cursive;
+    font-family: 'Lilita One', cursive;
     font-size: 22px;
     color: white;
     cursor: pointer;
@@ -658,870 +664,17 @@ body {
 /* Responsive */
 @media (max-width: 480px) {
     .game-title {
-        font-size: 24px;
-    }
-
-    .result-circle {
-        width: 100px;
-        height: 100px;
+        font-size: 28px;
+        letter-spacing: 2px;
     }
 
     .result-icon {
-        font-size: 60px;
+        font-size: 40px;
     }
 
-    .result-title {
-        font-size: 20px;
+    .result-text {
+        font-size: 18px;
     }
-
-    .spin-btn-main {
-        font-size: 28px;
-        padding: 15px;
-    }
-}
-
-/* Particle Effects */
-@keyframes fall {
-    to {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-    background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 50%, #FFA07A 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    overflow: hidden;
-    position: relative;
-}
-
-/* Background Effects */
-.bg-mountains {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 300px;
-    background: linear-gradient(to top, #5a4a3a 0%, #7a6a5a 50%, transparent 100%);
-    z-index: 0;
-    pointer-events: none;
-}
-
-.bg-clouds {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(ellipse 200px 100px at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 50%),
-        radial-gradient(ellipse 250px 120px at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 50%),
-        radial-gradient(ellipse 180px 90px at 50% 40%, rgba(255,255,255,0.25) 0%, transparent 50%);
-    animation: clouds 30s ease-in-out infinite;
-    z-index: 0;
-    pointer-events: none;
-}
-
-@keyframes clouds {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(50px); }
-}
-
-/* Game Wrapper */
-.game-wrapper {
-    width: 100%;
-    max-width: 420px;
-    height: 100vh;
-    max-height: 900px;
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Top Bar */
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background: rgba(26, 26, 46, 0.3);
-}
-
-.settings-btn {
-    width: 45px;
-    height: 45px;
-    background: rgba(0, 0, 0, 0.4);
-    border: none;
-    border-radius: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.settings-btn:active {
-    transform: scale(0.95);
-}
-
-.day-counter {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 8px 16px;
-    border-radius: 20px;
-}
-
-.day-icon {
-    font-size: 24px;
-}
-
-.day-text {
-    color: white;
-    font-weight: 600;
-    font-size: 16px;
-}
-
-.top-progress {
-    display: flex;
-    gap: 8px;
-}
-
-.progress-icon {
-    width: 35px;
-    height: 35px;
-    background: rgba(255, 215, 0, 0.3);
-    border: 2px solid rgba(255, 215, 0, 0.6);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-}
-
-.progress-icon.locked {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Main Game Container */
-.game-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    overflow-y: auto;
-    gap: 15px;
-}
-
-/* Title Banner */
-.title-banner {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    padding: 15px;
-    border-radius: 20px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
-    border: 3px solid #FF8C00;
-}
-
-.banner-shine {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        transparent 30%, 
-        rgba(255, 255, 255, 0.3) 50%, 
-        transparent 70%);
-    animation: shine 3s linear infinite;
-}
-
-@keyframes shine {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-.game-title {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 32px;
-    color: white;
-    text-shadow: 
-        3px 3px 0px #FF8C00,
-        -1px -1px 0px #FFE55C,
-        0 4px 10px rgba(0, 0, 0, 0.3);
-    letter-spacing: 2px;
-    position: relative;
-    z-index: 1;
-}
-
-/* Top Rewards Display */
-.rewards-top {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.power-box {
-    background: linear-gradient(135deg, #F5E6D3 0%, #E8D4B8 100%);
-    border-radius: 15px;
-    padding: 12px;
-    border: 3px solid #D4A574;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.power-avatar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 10px;
-}
-
-.avatar-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid white;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-}
-
-.angel-bg {
-    background: linear-gradient(135deg, #87CEEB 0%, #4FC3F7 100%);
-}
-
-.demon-bg {
-    background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
-}
-
-.avatar-icon {
-    font-size: 28px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.power-name {
-    font-size: 11px;
-    font-weight: 700;
-    color: #5a4a3a;
-    text-transform: uppercase;
-    text-align: center;
-}
-
-.power-slots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-}
-
-.mini-slot {
-    width: 32px;
-    height: 32px;
-    background: white;
-    border-radius: 50%;
-    border: 2px solid #D4A574;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s;
-}
-
-.mini-slot.locked {
-    background: #C0C0C0;
-    border-color: #999;
-}
-
-.mini-slot.filled {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border-color: #FF8C00;
-    animation: miniPulse 0.5s ease-out;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-}
-
-@keyframes miniPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-}
-
-.mini-icon {
-    font-size: 18px;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
-}
-
-/* Slot Machine Body */
-.slot-machine-body {
-    background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
-    border-radius: 25px;
-    padding: 20px;
-    border: 5px solid #D4A574;
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.4),
-        inset 0 -3px 10px rgba(0, 0, 0, 0.3),
-        inset 0 3px 10px rgba(255, 255, 255, 0.1);
-}
-
-.machine-frame {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 15px;
-}
-
-.arrow-btn {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border: 3px solid #FF8C00;
-    border-radius: 15px;
-    font-size: 24px;
-    color: #5a4a3a;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    font-weight: bold;
-}
-
-.arrow-btn:hover {
-    transform: scale(1.05);
-}
-
-.arrow-btn:active {
-    transform: scale(0.95);
-}
-
-.display-window {
-    flex: 1;
-    background: linear-gradient(135deg, #2a2a4e 0%, #1f1f3a 100%);
-    border-radius: 20px;
-    padding: 20px;
-    border: 4px solid rgba(255, 215, 0, 0.3);
-    box-shadow: 
-        inset 0 4px 15px rgba(0, 0, 0, 0.5),
-        0 0 30px rgba(255, 215, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-    min-height: 200px;
-}
-
-.display-window::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(180deg, 
-        rgba(255, 255, 255, 0.05) 0%, 
-        transparent 100%);
-    pointer-events: none;
-}
-
-.current-power {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-
-.power-display {
-    text-align: center;
-}
-
-.power-avatar-large {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 15px;
-    background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
-    border-radius: 50%;
-    border: 4px solid white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    animation: avatarFloat 3s ease-in-out infinite;
-}
-
-@keyframes avatarFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.avatar-large-icon {
-    font-size: 60px;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-}
-
-.power-title {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 24px;
-    color: #FFD700;
-    text-shadow: 
-        2px 2px 0px #FF8C00,
-        0 0 20px rgba(255, 215, 0, 0.6);
-    letter-spacing: 1px;
-}
-
-.reel-display {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    height: 60px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    overflow: hidden;
-    border: 2px solid rgba(255, 215, 0, 0.2);
-}
-
-.reel-track {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    width: 100%;
-}
-
-.reel-symbol {
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-}
-
-.reel-track.spinning {
-    animation: reelSpin 0.1s linear infinite;
-}
-
-@keyframes reelSpin {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-60px); }
-}
-
-.bottom-info {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    padding: 12px 20px;
-    border-radius: 15px;
-    text-align: center;
-    border: 3px solid #FF8C00;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.spins-left {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-.info-label {
-    font-size: 16px;
-    font-weight: 700;
-    color: #5a4a3a;
-    text-transform: uppercase;
-}
-
-.info-value {
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-    text-shadow: 2px 2px 0px #FF8C00;
-}
-
-/* Flavor Text */
-.flavor-text {
-    background: rgba(0, 0, 0, 0.6);
-    padding: 15px;
-    border-radius: 15px;
-    border: 2px solid rgba(255, 215, 0, 0.3);
-}
-
-.flavor-text p {
-    color: #E0E0E0;
-    font-size: 13px;
-    line-height: 1.5;
-    text-align: center;
-    font-style: italic;
-}
-
-/* Balance Display */
-.balance-display {
-    background: linear-gradient(135deg, #2a2a4e 0%, #1f1f3a 100%);
-    padding: 15px;
-    border-radius: 15px;
-    text-align: center;
-    border: 3px solid rgba(255, 215, 0, 0.4);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.balance-label {
-    color: #9999cc;
-    font-size: 14px;
-    margin-right: 10px;
-    font-weight: 600;
-}
-
-.balance-amount {
-    color: #FFD700;
-    font-size: 24px;
-    font-weight: 700;
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-}
-
-/* Bet Section */
-.bet-section {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.bet-controls-inline {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.bet-btn-small {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border: 3px solid #FF8C00;
-    border-radius: 12px;
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.bet-btn-small:active {
-    transform: scale(0.95);
-}
-
-#bet-input {
-    flex: 1;
-    height: 50px;
-    background: white;
-    border: 3px solid #D4A574;
-    border-radius: 12px;
-    font-size: 20px;
-    font-weight: 700;
-    text-align: center;
-    color: #5a4a3a;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-#bet-input:focus {
-    outline: none;
-    border-color: #FFD700;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-}
-
-.quick-bets-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
-
-.quick-chip {
-    padding: 12px;
-    background: linear-gradient(135deg, #F5E6D3 0%, #E8D4B8 100%);
-    border: 3px solid #D4A574;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #5a4a3a;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-}
-
-.quick-chip:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
-}
-
-.quick-chip.active {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border-color: #FF8C00;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* Spin Button */
-.spin-btn-large {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border: none;
-    border-radius: 20px;
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 32px;
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 
-        0 6px 0 #CC8800,
-        0 8px 20px rgba(0, 0, 0, 0.4);
-    text-shadow: 3px 3px 0px #CC8800;
-    letter-spacing: 2px;
-    border: 3px solid #FF8C00;
-}
-
-.spin-btn-large:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 8px 0 #CC8800,
-        0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.spin-btn-large:active:not(:disabled) {
-    transform: translateY(2px);
-    box-shadow: 
-        0 4px 0 #CC8800,
-        0 6px 15px rgba(0, 0, 0, 0.3);
-}
-
-.spin-btn-large:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.spin-btn-large.spinning {
-    animation: spinPulse 0.5s ease-in-out infinite;
-}
-
-@keyframes spinPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-}
-
-/* Stats Footer */
-.stats-footer {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
-
-.stat-box {
-    background: linear-gradient(135deg, #F5E6D3 0%, #E8D4B8 100%);
-    padding: 12px;
-    border-radius: 12px;
-    text-align: center;
-    border: 3px solid #D4A574;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-}
-
-.stat-label {
-    display: block;
-    font-size: 11px;
-    color: #5a4a3a;
-    font-weight: 600;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-}
-
-.stat-value {
-    display: block;
-    font-size: 16px;
-    font-weight: 700;
-    color: #FF8C00;
-}
-
-/* Bottom Navigation */
-.bottom-nav {
-    display: flex;
-    justify-content: space-around;
-    background: rgba(26, 26, 46, 0.9);
-    padding: 12px 0;
-    border-top: 2px solid rgba(255, 215, 0, 0.3);
-}
-
-.nav-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    background: none;
-    border: none;
-    color: #9999cc;
-    cursor: pointer;
-    padding: 8px 20px;
-    transition: all 0.2s;
-}
-
-.nav-btn.active {
-    color: #FFD700;
-}
-
-.nav-icon {
-    font-size: 24px;
-}
-
-.nav-label {
-    font-size: 12px;
-    font-weight: 600;
-}
-
-/* Win Popup */
-.win-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-}
-
-.win-popup.show {
-    display: flex;
-    animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.win-content {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    padding: 50px 40px;
-    border-radius: 30px;
-    text-align: center;
-    border: 4px solid #FFD700;
-    box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.8),
-        0 0 100px rgba(255, 215, 0, 0.6);
-    animation: popUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    max-width: 350px;
-}
-
-@keyframes popUp {
-    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
-
-.win-icon {
-    font-size: 100px;
-    margin-bottom: 20px;
-    animation: winBounce 1s ease-in-out infinite;
-}
-
-@keyframes winBounce {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-20px) scale(1.1); }
-}
-
-.win-message {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 32px;
-    color: white;
-    margin-bottom: 15px;
-    text-shadow: 
-        3px 3px 0px #FF8C00,
-        0 0 30px rgba(255, 215, 0, 0.8);
-    letter-spacing: 2px;
-}
-
-.win-amount {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 56px;
-    color: #FFD700;
-    margin-bottom: 30px;
-    text-shadow: 
-        4px 4px 0px #FF8C00,
-        0 0 40px rgba(255, 215, 0, 1);
-    animation: amountPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes amountPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.close-popup {
-    padding: 18px 50px;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    border: none;
-    border-radius: 15px;
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 
-        0 5px 0 #CC8800,
-        0 7px 15px rgba(0, 0, 0, 0.4);
-    text-shadow: 2px 2px 0px #CC8800;
-    border: 3px solid #FF8C00;
-}
-
-.close-popup:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 7px 0 #CC8800,
-        0 9px 20px rgba(0, 0, 0, 0.5);
-}
-
-.close-popup:active {
-    transform: translateY(2px);
-    box-shadow: 
-        0 3px 0 #CC8800,
-        0 5px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .game-wrapper {
-        max-height: 100vh;
-    }
-
-    .game-title {
-        font-size: 26px;
-    }
-
-    .power-avatar-large {
-        width: 80px;
-        height: 80px;
-    }
-
-    .avatar-large-icon {
-        font-size: 48px;
-    }
-
-    .power-title {
-        font-size: 20px;
-    }
-
-    .spin-btn-large {
-        font-size: 28px;
-        padding: 15px;
-    }
-}
-
-/* Loading/Spinning Effects */
-.spinning-effect {
-    animation: rotate360 1s linear infinite;
-}
-
-@keyframes rotate360 {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
 }
 
 /* Particle Effects */
