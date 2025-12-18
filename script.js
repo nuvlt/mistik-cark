@@ -87,8 +87,8 @@ function init() {
 // Create Reel Segments
 function createReelSegments() {
     const symbolKeys = Object.keys(symbols);
-    // Create 20 segments for smooth scrolling
-    for (let i = 0; i < 20; i++) {
+    // Create only 6 segments for clean vertical scrolling
+    for (let i = 0; i < 6; i++) {
         const segment = document.createElement('div');
         segment.className = 'reel-segment';
         const randomSymbol = symbolKeys[Math.floor(Math.random() * symbolKeys.length)];
@@ -128,87 +128,41 @@ function updateResultDisplay(icon, text) {
     elements.resultText.textContent = text;
 }
 
-// Adjust Bet
-function adjustBet(amount) {
-    const newBet = gameState.currentBet + amount;
-    if (newBet >= config.minBet && newBet <= config.maxBet && newBet <= gameState.balance) {
-        gameState.currentBet = newBet;
-        elements.betInput.value = newBet;
-        updateDisplay();
-        updateQuickBets();
-    }
-}
-
-// Handle Bet Input
-function handleBetInput(e) {
-    const value = parseInt(e.target.value) || config.minBet;
-    gameState.currentBet = Math.max(config.minBet, Math.min(value, config.maxBet, gameState.balance));
-    updateQuickBets();
-}
-
-// Validate Bet
-function validateBet() {
-    if (elements.betInput.value < config.minBet) {
-        elements.betInput.value = config.minBet;
-    } else if (elements.betInput.value > config.maxBet) {
-        elements.betInput.value = config.maxBet;
-    } else if (elements.betInput.value > gameState.balance) {
-        elements.betInput.value = Math.min(gameState.balance, config.maxBet);
-    }
-    gameState.currentBet = parseInt(elements.betInput.value);
-    updateDisplay();
-    updateQuickBets();
-}
-
-// Update Quick Bet Buttons
-function updateQuickBets() {
-    document.querySelectorAll('.quick-bet').forEach(btn => {
-        const betAmount = parseInt(btn.dataset.bet);
-        btn.classList.toggle('active', betAmount === gameState.currentBet);
-        btn.disabled = betAmount > gameState.balance;
-    });
-}
-
-// Get Random Symbol
-function getRandomSymbol() {
-    const random = Math.random() * totalWeight;
-    let cumulativeWeight = 0;
-    
-    for (const [symbol, config] of Object.entries(symbols)) {
-        cumulativeWeight += config.weight;
-        if (random < cumulativeWeight) {
-            return symbol;
-        }
-    }
-    
-    return '❌';
-}
-
 // Animate Reel Spin (3D Cylinder)
-async function animateReelSpin(duration = 2500) {
+async function animateReelSpin(finalResult, duration = 2500) {
     return new Promise(resolve => {
         const symbolKeys = Object.keys(symbols);
         elements.reelStrip.classList.add('spinning');
         
         let elapsed = 0;
         const interval = setInterval(() => {
-            // Update visible symbols randomly
+            // Update all visible segments randomly during spin
             const segments = elements.reelStrip.querySelectorAll('.reel-segment');
-            segments.forEach(segment => {
+            segments.forEach((segment, index) => {
                 const randomSymbol = symbolKeys[Math.floor(Math.random() * symbolKeys.length)];
                 segment.textContent = randomSymbol;
             });
             
-            // Update result display
+            // Update result display during spin
             const randomSymbol = symbolKeys[Math.floor(Math.random() * symbolKeys.length)];
             const symbolConfig = symbols[randomSymbol];
-            updateResultDisplay(randomSymbol, symbolConfig.title);
+            updateResultDisplay(randomSymbol, 'Çevriliyor...');
             
             elapsed += 80;
-            if (elapsed >= duration) {
+            
+            // Slow down at the end
+            if (elapsed >= duration - 500) {
                 clearInterval(interval);
-                elements.reelStrip.classList.remove('spinning');
-                resolve();
+                // Final positioning - show result in center (2nd segment)
+                const finalSegments = elements.reelStrip.querySelectorAll('.reel-segment');
+                finalSegments[0].textContent = symbolKeys[Math.floor(Math.random() * symbolKeys.length)];
+                finalSegments[1].textContent = finalResult; // Center slot
+                finalSegments[2].textContent = symbolKeys[Math.floor(Math.random() * symbolKeys.length)];
+                
+                setTimeout(() => {
+                    elements.reelStrip.classList.remove('spinning');
+                    resolve();
+                }, 400);
             }
         }, 80);
     });
@@ -231,26 +185,20 @@ async function spin() {
     gameState.spinCount++;
     updateDisplay();
     
-    updateResultDisplay('🎰', 'Çevriliyor...');
-    
-    // Animate reel
-    await animateReelSpin(2500);
-    
-    // Get result
+    // Get result first
     const result = getRandomSymbol();
     const symbolConfig = symbols[result];
+    
+    updateResultDisplay('🎰', 'Çevriliyor...');
+    
+    // Animate reel with final result
+    await animateReelSpin(result, 2500);
     
     // Show result
     updateResultDisplay(result, symbolConfig.title);
     
-    // Update center segment to show result
-    const centerSegment = elements.reelStrip.querySelector('.reel-segment:nth-child(3)');
-    if (centerSegment) {
-        centerSegment.textContent = result;
-    }
-    
     // Calculate winnings
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 600));
     await calculateWinnings(result);
     
     gameState.isSpinning = false;
