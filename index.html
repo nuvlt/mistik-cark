@@ -3,141 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mistik Çark - Şans Oyunu</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Mistik Çark</title>
+    <link rel="stylesheet" href="style-exact.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Background Effects -->
-    <div class="bg-mountains"></div>
-    <div class="bg-clouds"></div>
-    
-    <div class="game-wrapper">
+    <div class="game-screen">
         <!-- Top Bar -->
         <div class="top-bar">
             <button class="settings-btn">⚙️</button>
-            <div class="balance-display-top">
-                <span class="balance-icon">💰</span>
-                <span class="balance-amount-top" id="balance-top">1000₺</span>
+            <div class="day-badge">
+                <span class="day-icon">☀️</span>
+                <span class="day-text">Day 1</span>
+            </div>
+            <div class="top-icons">
+                <div class="top-icon">🏆</div>
+                <div class="top-icon">🎯</div>
+                <div class="top-icon">⭐</div>
+                <div class="top-icon locked">🔒</div>
             </div>
         </div>
 
-        <!-- Main Game Container -->
-        <div class="game-container">
-            <!-- Mistik Çark Title Banner -->
-            <div class="title-banner">
-                <div class="banner-shine"></div>
-                <h1 class="game-title">MİSTİK ÇARK</h1>
-            </div>
+        <!-- Title Banner -->
+        <div class="title-banner">
+            <h1 class="game-title">MİSTİK ÇARK</h1>
+        </div>
 
-            <!-- Top Rewards Display -->
-            <div class="rewards-top">
-                <!-- Melek Gücü -->
-                <div class="power-box angel-power">
-                    <div class="power-avatar">
-                        <div class="avatar-circle angel-bg">
-                            <span class="avatar-icon">😇</span>
-                        </div>
-                        <span class="power-name">Melek Gücü</span>
-                    </div>
-                    <div class="power-slots">
-                        <div class="mini-slot filled" id="gold-slot-1">
-                            <span class="mini-icon">😇</span>
-                        </div>
-                        <div class="mini-slot locked" id="gold-slot-2">
-                            <span class="mini-icon">⚪</span>
-                        </div>
-                        <div class="mini-slot locked" id="gold-slot-3">
-                            <span class="mini-icon">⚪</span>
-                        </div>
-                    </div>
+        <!-- Power Boxes -->
+        <div class="power-section">
+            <div class="power-box">
+                <div class="power-avatar-big">
+                    <div class="avatar-circle blue">😇</div>
                 </div>
-
-                <!-- Şeytan Gücü -->
-                <div class="power-box spawn-power">
-                    <div class="power-avatar">
-                        <div class="avatar-circle demon-bg">
-                            <span class="avatar-icon">😈</span>
-                        </div>
-                        <span class="power-name">Şeytan Gücü</span>
-                    </div>
-                    <div class="power-slots">
-                        <div class="mini-slot filled" id="diamond-slot-1">
-                            <span class="mini-icon">😈</span>
-                        </div>
-                        <div class="mini-slot locked" id="diamond-slot-2">
-                            <span class="mini-icon">⚪</span>
-                        </div>
-                        <div class="mini-slot locked" id="diamond-slot-3">
-                            <span class="mini-icon">⚪</span>
-                        </div>
-                    </div>
+                <div class="power-label">MELEK GÜCÜ</div>
+                <div class="power-progress">
+                    <div class="progress-dot filled">😇</div>
+                    <div class="progress-dot locked">⚪</div>
+                    <div class="progress-dot locked">⚪</div>
                 </div>
             </div>
 
-            <!-- Slot Machine Body -->
-            <div class="slot-machine-body">
-                <!-- Machine Frame -->
-                <div class="machine-frame">
-                    <!-- Spinning Wheel Container -->
-                    <div class="wheel-container">
-                        <!-- Result Display Window -->
-                        <div class="result-window">
-                            <div class="result-badge">
-                                <div class="result-icon" id="result-icon">😈</div>
-                                <div class="result-text" id="result-text">Demon Power</div>
-                            </div>
-                        </div>
-                        
-                        <!-- 3D Cylinder Reel -->
-                        <div class="reel-container">
-                            <div class="reel-strip" id="reel-strip">
-                                <!-- Reel segments will be created by JS -->
-                            </div>
-                            <div class="wheel-center"></div>
-                        </div>
-                        
-                        <!-- Decorative Frame -->
-                        <div class="wheel-frame-deco"></div>
-                    </div>
+            <div class="power-box">
+                <div class="power-avatar-big">
+                    <div class="avatar-circle pink">😈</div>
                 </div>
-
-                <!-- Clickable Bet Button -->
-                <button class="bet-button-main" id="bet-button-main">
-                    <div class="bet-button-content">
-                        <span class="bet-label">BAHİS:</span>
-                        <span class="bet-value" id="bet-value-display">25₺</span>
-                    </div>
-                </button>
+                <div class="power-label">ŞEYTAN GÜCÜ</div>
+                <div class="power-progress">
+                    <div class="progress-dot filled">😈</div>
+                    <div class="progress-dot locked">⚪</div>
+                    <div class="progress-dot locked">⚪</div>
+                </div>
             </div>
+        </div>
 
-            <!-- Bet Controls - Compact Inline -->
-            <div class="bet-controls-inline">
-                <button class="bet-adjust-btn" id="decrease-bet">−</button>
-                <input type="number" id="bet-input" value="25" min="10" max="500" step="5">
-                <button class="bet-adjust-btn" id="increase-bet">+</button>
-                <button class="quick-bet" data-bet="10">10</button>
-                <button class="quick-bet active" data-bet="25">25</button>
-                <button class="quick-bet" data-bet="50">50</button>
-                <button class="quick-bet" data-bet="100">100</button>
+        <!-- Main Machine -->
+        <div class="machine-frame">
+            <!-- Arrow Buttons -->
+            <button class="arrow-btn left">◀</button>
+            <button class="arrow-btn right">▶</button>
+
+            <!-- Display Area -->
+            <div class="display-area">
+                <!-- Big Result Circle -->
+                <div class="result-circle" id="result-circle">
+                    <span class="result-symbol" id="result-symbol">❌</span>
+                </div>
+
+                <!-- Bottom Panel -->
+                <div class="bottom-panel">
+                    <span class="panel-text" id="panel-text">TRY 😇 GAIN</span>
+                </div>
             </div>
+        </div>
 
-            <!-- Stats Footer -->
-            <div class="stats-row">
-                <div class="stat-item">
-                    <span class="stat-label">Toplam</span>
-                    <span class="stat-value" id="total-win">0₺</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">En Yüksek</span>
-                    <span class="stat-value" id="highest-win">0₺</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Çevirme</span>
-                    <span class="stat-value" id="spin-count">0</span>
-                </div>
+        <!-- Bet Button -->
+        <button class="bet-button" id="bet-button">
+            <span class="bet-label">BAHİS:</span>
+            <span class="bet-amount" id="bet-amount">25₺</span>
+        </button>
+
+        <!-- Bet Controls -->
+        <div class="bet-controls">
+            <button class="bet-mini-btn" id="decrease">−</button>
+            <input type="number" id="bet-input" value="25" min="10" max="500" step="5">
+            <button class="bet-mini-btn" id="increase">+</button>
+            <button class="quick-bet-btn" data-bet="10">10</button>
+            <button class="quick-bet-btn active" data-bet="25">25</button>
+            <button class="quick-bet-btn" data-bet="50">50</button>
+            <button class="quick-bet-btn" data-bet="100">100</button>
+        </div>
+
+        <!-- Flavor Text -->
+        <div class="flavor-box">
+            <p id="flavor-text">Kadim güçler çarkı çeviriyor. Kaderiniz belirlenecek...</p>
+        </div>
+
+        <!-- Balance Display -->
+        <div class="balance-bar">
+            <span class="balance-icon">💰</span>
+            <span class="balance-text" id="balance">1000₺</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-label">Toplam</div>
+                <div class="stat-value" id="total-win">0₺</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">En Yüksek</div>
+                <div class="stat-value" id="highest-win">0₺</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Çevirme</div>
+                <div class="stat-value" id="spin-count">0</div>
             </div>
         </div>
     </div>
@@ -146,12 +127,12 @@
     <div class="win-popup" id="win-popup">
         <div class="win-content">
             <div class="win-icon" id="win-icon">🎉</div>
-            <div class="win-message" id="win-message">Kazandınız!</div>
-            <div class="win-amount" id="win-amount">100₺</div>
-            <button class="close-popup" id="close-popup">Devam Et</button>
+            <div class="win-message" id="win-message">KAZANDINIZ!</div>
+            <div class="win-amount-big" id="win-amount-big">100₺</div>
+            <button class="continue-btn" id="continue-btn">Devam Et</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script-exact.js"></script>
 </body>
 </html>
