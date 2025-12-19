@@ -291,9 +291,9 @@ function updateProgressSlots(type) {
         const slot = slots[count - 1];
         if (slot) {
             console.log(`✅ Filling slot ${count} for ${type}`);
-            slot.classList.add(bgClass, 'border-white', 'filled');
+            slot.classList.add(bgClass, 'border-white', 'filled', 'shadow-sm');
             slot.classList.remove('bg-[#4E342E]', 'border-[#3E2723]');
-            slot.innerHTML = `<span class="text-xs">${icon}</span>`;
+            slot.innerHTML = `<span class="text-[10px] leading-none">${icon}</span>`;
         } else {
             console.error(`❌ Slot ${count} not found`);
         }
@@ -311,22 +311,14 @@ function resetProgressSlots(type) {
     }
     
     const slots = container.querySelectorAll(`.${type}-slot`);
-    const icon = type === 'gold' ? '😇' : '😈';
     const bgClass = type === 'gold' ? 'bg-accent-angel' : 'bg-accent-demon';
     
     setTimeout(() => {
-        slots.forEach((slot, i) => {
-            if (i === 0) {
-                // Keep first slot filled
-                slot.classList.add(bgClass, 'border-white', 'filled');
-                slot.classList.remove('bg-[#4E342E]', 'border-[#3E2723]');
-                slot.innerHTML = `<span class="text-xs">${icon}</span>`;
-            } else {
-                // Reset other slots
-                slot.classList.remove(bgClass, 'border-white', 'filled');
-                slot.classList.add('bg-[#4E342E]', 'border-[#3E2723]');
-                slot.innerHTML = '';
-            }
+        slots.forEach((slot) => {
+            // Clear all slots completely
+            slot.classList.remove(bgClass, 'border-white', 'filled', 'shadow-sm');
+            slot.classList.add('bg-[#4E342E]', 'border-[#3E2723]');
+            slot.innerHTML = '';
         });
         console.log(`✅ Reset complete for ${type}`);
     }, 3000);
