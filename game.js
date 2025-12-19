@@ -272,39 +272,63 @@ async function calculateWinnings(symbol) {
 
 // Update Progress Slots
 function updateProgressSlots(type) {
+    console.log(`🔄 Updating ${type} progress to ${type === 'gold' ? gameState.goldSlots : gameState.diamondSlots}`);
+    
     const container = type === 'gold' ? document.getElementById('gold-progress') : document.getElementById('diamond-progress');
+    if (!container) {
+        console.error(`❌ Container not found for ${type}`);
+        return;
+    }
+    
     const slots = container.querySelectorAll(`.${type}-slot`);
+    console.log(`Found ${slots.length} ${type} slots`);
+    
     const count = type === 'gold' ? gameState.goldSlots : gameState.diamondSlots;
     const icon = type === 'gold' ? '😇' : '😈';
     const bgClass = type === 'gold' ? 'bg-accent-angel' : 'bg-accent-demon';
     
     if (count > 0 && count <= 3) {
         const slot = slots[count - 1];
-        slot.classList.add(bgClass, 'border-white', 'filled');
-        slot.classList.remove('bg-[#4E342E]', 'border-[#3E2723]');
-        slot.innerHTML = `<span class="text-xs">${icon}</span>`;
+        if (slot) {
+            console.log(`✅ Filling slot ${count} for ${type}`);
+            slot.classList.add(bgClass, 'border-white', 'filled');
+            slot.classList.remove('bg-[#4E342E]', 'border-[#3E2723]');
+            slot.innerHTML = `<span class="text-xs">${icon}</span>`;
+        } else {
+            console.error(`❌ Slot ${count} not found`);
+        }
     }
 }
 
 // Reset Progress Slots
 function resetProgressSlots(type) {
+    console.log(`🔄 Resetting ${type} progress slots`);
+    
     const container = type === 'gold' ? document.getElementById('gold-progress') : document.getElementById('diamond-progress');
+    if (!container) {
+        console.error(`❌ Container not found for ${type}`);
+        return;
+    }
+    
     const slots = container.querySelectorAll(`.${type}-slot`);
     const icon = type === 'gold' ? '😇' : '😈';
     const bgClass = type === 'gold' ? 'bg-accent-angel' : 'bg-accent-demon';
     
     setTimeout(() => {
         slots.forEach((slot, i) => {
-            slot.classList.remove(bgClass, 'border-white', 'filled');
-            slot.classList.add('bg-[#4E342E]', 'border-[#3E2723]');
             if (i === 0) {
-                slot.innerHTML = `<span class="text-xs">${icon}</span>`;
+                // Keep first slot filled
                 slot.classList.add(bgClass, 'border-white', 'filled');
                 slot.classList.remove('bg-[#4E342E]', 'border-[#3E2723]');
+                slot.innerHTML = `<span class="text-xs">${icon}</span>`;
             } else {
+                // Reset other slots
+                slot.classList.remove(bgClass, 'border-white', 'filled');
+                slot.classList.add('bg-[#4E342E]', 'border-[#3E2723]');
                 slot.innerHTML = '';
             }
         });
+        console.log(`✅ Reset complete for ${type}`);
     }, 3000);
 }
 
