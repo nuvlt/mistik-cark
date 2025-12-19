@@ -1,138 +1,238 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mistik Çark</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mistik Çark - Şans Oyunu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#fbbf24",
+                    "primary-dark": "#d97706",
+                    "background-light": "#FFFBEB",
+                    "background-dark": "#18181b",
+                    "panel-bg-light": "#8D6E63",
+                    "panel-bg-dark": "#3E2723",
+                    "accent-angel": "#67E8F9",
+                    "accent-demon": "#F472B6",
+                },
+                fontFamily: {
+                    display: ["Titan One", "cursive"],
+                    body: ["Nunito", "sans-serif"],
+                },
+                boxShadow: {
+                    'inner-strong': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.6)',
+                }
+            },
+        },
+    };
+</script>
+<style>
+    .text-stroke {
+        -webkit-text-stroke: 1.5px #3E2723; 
+        text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+    }
+    .text-stroke-light {
+        -webkit-text-stroke: 1px #854d0e;
+        text-shadow: 1px 1px 0px rgba(133, 77, 14, 0.5);
+    }
+    .sunburst {
+        background: repeating-conic-gradient(
+            from 0deg,
+            rgba(255, 255, 255, 0.4) 0deg 15deg,
+            rgba(255, 255, 255, 0.1) 15deg 30deg
+        );
+    }
+    body {
+        min-height: max(884px, 100dvh);
+    }
+    @keyframes fall {
+        to {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+</style>
 </head>
-<body>
-    <div class="game-screen">
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <button class="settings-btn">⚙️</button>
-            <div class="day-badge">
-                <span class="day-icon">☀️</span>
-                <span class="day-text">Day 1</span>
-            </div>
-            <div class="top-icons">
-                <div class="top-icon">🏆</div>
-                <div class="top-icon">🎯</div>
-                <div class="top-icon">⭐</div>
-                <div class="top-icon locked">🔒</div>
-            </div>
-        </div>
+<body class="bg-background-light dark:bg-background-dark font-body min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
 
-        <!-- Title Banner -->
-        <div class="title-banner">
-            <h1 class="game-title">MİSTİK ÇARK</h1>
+<div class="w-full max-w-sm sm:max-w-md relative pb-10">
+    <!-- Title Banner -->
+    <div class="relative z-20 mx-6 -mb-5">
+        <div class="bg-primary border-b-[6px] border-primary-dark rounded-lg p-3 shadow-lg transform -skew-x-1 ring-4 ring-[#3E2723] dark:ring-[#271815]">
+            <h1 class="font-display text-xl sm:text-2xl text-white text-center tracking-wide text-stroke uppercase">
+                Mistik Çark
+            </h1>
+            <div class="absolute top-2 left-2 w-2 h-2 bg-yellow-200 rounded-full border border-yellow-800 shadow-sm"></div>
+            <div class="absolute top-2 right-2 w-2 h-2 bg-yellow-200 rounded-full border border-yellow-800 shadow-sm"></div>
+            <div class="absolute bottom-2 left-2 w-2 h-2 bg-yellow-200 rounded-full border border-yellow-800 shadow-sm"></div>
+            <div class="absolute bottom-2 right-2 w-2 h-2 bg-yellow-200 rounded-full border border-yellow-800 shadow-sm"></div>
         </div>
+    </div>
 
+    <!-- Main Container -->
+    <div class="bg-[#6D4C41] dark:bg-[#4E342E] rounded-[2rem] border-x-4 border-b-[8px] border-[#3E2723] dark:border-[#271815] pt-12 pb-8 px-4 sm:px-6 shadow-2xl relative overflow-hidden z-10">
+        
         <!-- Power Boxes -->
-        <div class="power-section">
-            <div class="power-box">
-                <div class="power-avatar-big">
-                    <div class="avatar-circle blue">😇</div>
-                </div>
-                <div class="power-label">MELEK GÜCÜ</div>
-                <div class="power-progress">
-                    <div class="progress-dot filled">😇</div>
-                    <div class="progress-dot locked">⚪</div>
-                    <div class="progress-dot locked">⚪</div>
-                </div>
-            </div>
-
-            <div class="power-box">
-                <div class="power-avatar-big">
-                    <div class="avatar-circle pink">😈</div>
-                </div>
-                <div class="power-label">ŞEYTAN GÜCÜ</div>
-                <div class="power-progress">
-                    <div class="progress-dot filled">😈</div>
-                    <div class="progress-dot locked">⚪</div>
-                    <div class="progress-dot locked">⚪</div>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <!-- Angel Power -->
+            <div class="bg-panel-bg-light dark:bg-[#3E2723] rounded-xl p-2 border-b-4 border-[#5D4037] dark:border-[#2D1B1B] shadow-lg flex flex-col items-center">
+                <span class="font-display text-[10px] sm:text-xs text-[#FFE082] mb-1 text-center tracking-wider drop-shadow-md uppercase">Melek Gücü</span>
+                <div class="flex items-center gap-2 w-full justify-between bg-black/30 rounded-lg p-1.5 shadow-inner-strong">
+                    <div class="w-10 h-10 rounded-lg bg-accent-angel border-2 border-white flex items-center justify-center shrink-0 shadow-sm overflow-hidden relative group">
+                        <span class="text-3xl">😇</span>
+                    </div>
+                    <div class="flex gap-1 justify-center grow" id="gold-progress">
+                        <div class="w-5 h-5 rounded-full bg-accent-angel border-2 border-white flex items-center justify-center shadow-sm gold-slot filled">
+                            <span class="text-xs">😇</span>
+                        </div>
+                        <div class="w-5 h-5 rounded-full bg-[#4E342E] border-2 border-[#3E2723] gold-slot"></div>
+                        <div class="w-5 h-5 rounded-full bg-[#4E342E] border-2 border-[#3E2723] gold-slot"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Main Machine -->
-        <div class="machine-frame">
-            <!-- Arrow Buttons -->
-            <button class="arrow-btn left">◀</button>
-            <button class="arrow-btn right">▶</button>
-
-            <!-- Display Area -->
-            <div class="display-area">
-                <!-- Big Result Circle -->
-                <div class="result-circle" id="result-circle">
-                    <span class="result-symbol" id="result-symbol">❌</span>
-                </div>
-
-                <!-- Bottom Panel -->
-                <div class="bottom-panel">
-                    <span class="panel-text" id="panel-text">TRY 😇 GAIN</span>
+            <!-- Demon Power -->
+            <div class="bg-panel-bg-light dark:bg-[#3E2723] rounded-xl p-2 border-b-4 border-[#5D4037] dark:border-[#2D1B1B] shadow-lg flex flex-col items-center">
+                <span class="font-display text-[10px] sm:text-xs text-[#FFE082] mb-1 text-center tracking-wider drop-shadow-md uppercase">Şeytan Gücü</span>
+                <div class="flex items-center gap-2 w-full justify-between bg-black/30 rounded-lg p-1.5 shadow-inner-strong">
+                    <div class="w-10 h-10 rounded-lg bg-accent-demon border-2 border-white flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+                        <span class="text-3xl">😈</span>
+                    </div>
+                    <div class="flex gap-1 justify-center grow" id="diamond-progress">
+                        <div class="w-5 h-5 rounded-full bg-accent-demon border-2 border-white flex items-center justify-center shadow-sm diamond-slot filled">
+                            <span class="text-xs">😈</span>
+                        </div>
+                        <div class="w-5 h-5 rounded-full bg-[#4E342E] border-2 border-[#3E2723] diamond-slot"></div>
+                        <div class="w-5 h-5 rounded-full bg-[#4E342E] border-2 border-[#3E2723] diamond-slot"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bet Button -->
-        <button class="bet-button" id="bet-button">
-            <span class="bet-label">BAHİS:</span>
-            <span class="bet-amount" id="bet-amount">25₺</span>
-        </button>
+        <!-- Main Display -->
+        <div class="relative bg-[#3E2723] rounded-2xl p-1.5 shadow-xl border-b-[6px] border-[#271815] mb-5">
+            <div class="border-[6px] border-primary rounded-xl bg-gradient-to-b from-[#5D4037] to-[#3E2723] relative p-1 shadow-inner">
+                <!-- Left Arrow -->
+                <div class="absolute left-[-16px] top-1/2 -translate-y-1/2 z-20 drop-shadow-lg">
+                    <div class="w-0 h-0 border-t-[12px] border-t-transparent border-r-[20px] border-r-primary border-b-[12px] border-b-transparent"></div>
+                    <div class="absolute top-[-8px] left-[4px] w-0 h-0 border-t-[8px] border-t-transparent border-r-[14px] border-r-[#D32F2F] border-b-[8px] border-b-transparent"></div>
+                </div>
+                
+                <!-- Right Arrow -->
+                <div class="absolute right-[-16px] top-1/2 -translate-y-1/2 z-20 drop-shadow-lg">
+                    <div class="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-primary border-b-[12px] border-b-transparent"></div>
+                    <div class="absolute top-[-8px] right-[4px] w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-[#D32F2F] border-b-[8px] border-b-transparent"></div>
+                </div>
+
+                <!-- Display Area -->
+                <div class="h-44 bg-gradient-to-b from-indigo-950 via-purple-900 to-indigo-950 rounded-lg relative overflow-hidden flex items-center justify-center border-2 border-[#271815] shadow-inner-strong">
+                    <div class="absolute top-[-45px] opacity-20 blur-md w-3/4 h-12 bg-white/20 rounded-full"></div>
+                    
+                    <!-- Result Display -->
+                    <div class="relative w-full h-28 bg-gradient-to-r from-purple-500/80 via-pink-400 to-purple-500/80 flex items-center justify-between px-3 sm:px-4 shadow-[0_0_30px_rgba(244,114,182,0.6)] z-10 border-y-2 border-white/70" id="result-display">
+                        <div class="absolute inset-0 sunburst opacity-40"></div>
+                        
+                        <!-- Result Symbol -->
+                        <div class="relative z-10 w-20 h-20 rounded-full border-[5px] border-white bg-red-500 overflow-hidden shadow-xl shrink-0 flex items-center justify-center" id="result-circle">
+                            <span class="text-5xl" id="result-symbol">😈</span>
+                        </div>
+                        
+                        <!-- Result Text -->
+                        <div class="relative z-10 flex-grow text-center pl-2">
+                            <h2 class="font-display text-xl sm:text-2xl text-white drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] stroke-black text-stroke-light leading-none" id="result-text">Çarkı Çevir!</h2>
+                        </div>
+                        
+                        <div class="absolute top-2 right-2 z-20">
+                            <span class="material-icons-round text-yellow-200 text-xl">auto_awesome</span>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute bottom-[-45px] opacity-20 blur-md w-3/4 h-12 bg-white/20 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bet Display -->
+        <div class="bg-[#3E2723] rounded-lg py-3 px-4 mb-4 text-center border-2 border-[#271815] shadow-inner relative">
+            <span class="font-display text-white text-lg tracking-wide drop-shadow-md">Bahis: <span class="text-primary text-xl ml-1" id="bet-display">25₺</span></span>
+        </div>
 
         <!-- Bet Controls -->
-        <div class="bet-controls">
-            <button class="bet-mini-btn" id="decrease">−</button>
-            <input type="number" id="bet-input" value="25" min="10" max="500" step="5">
-            <button class="bet-mini-btn" id="increase">+</button>
-            <button class="quick-bet-btn" data-bet="10">10</button>
-            <button class="quick-bet-btn active" data-bet="25">25</button>
-            <button class="quick-bet-btn" data-bet="50">50</button>
-            <button class="quick-bet-btn" data-bet="100">100</button>
+        <div class="flex gap-2 mb-6 px-2 items-center justify-center">
+            <button id="decrease-bet" class="w-10 h-10 bg-primary rounded-lg border-2 border-primary-dark text-white font-bold text-xl active:scale-95 transition-transform">−</button>
+            <input type="number" id="bet-input" value="25" min="10" max="500" step="5" class="w-20 h-10 bg-white dark:bg-gray-800 text-center font-bold rounded-lg border-2 border-primary-dark"/>
+            <button id="increase-bet" class="w-10 h-10 bg-primary rounded-lg border-2 border-primary-dark text-white font-bold text-xl active:scale-95 transition-transform">+</button>
+            <button class="quick-bet px-3 h-10 bg-panel-bg-light dark:bg-panel-bg-dark rounded-lg border-2 border-[#5D4037] text-white font-bold text-sm active:scale-95 transition-transform" data-bet="10">10</button>
+            <button class="quick-bet px-3 h-10 bg-primary rounded-lg border-2 border-primary-dark text-white font-bold text-sm active:scale-95 transition-transform active-bet" data-bet="25">25</button>
+            <button class="quick-bet px-3 h-10 bg-panel-bg-light dark:bg-panel-bg-dark rounded-lg border-2 border-[#5D4037] text-white font-bold text-sm active:scale-95 transition-transform" data-bet="50">50</button>
+            <button class="quick-bet px-3 h-10 bg-panel-bg-light dark:bg-panel-bg-dark rounded-lg border-2 border-[#5D4037] text-white font-bold text-sm active:scale-95 transition-transform" data-bet="100">100</button>
         </div>
 
         <!-- Flavor Text -->
-        <div class="flavor-box">
-            <p id="flavor-text">Kadim güçler çarkı çeviriyor. Kaderiniz belirlenecek...</p>
+        <div class="mb-6 px-2 text-center">
+            <p class="text-sm text-[#D7CCC8] dark:text-[#A1887F] font-bold leading-relaxed opacity-90" id="flavor-text">
+                Kadim güçler çarkı çeviriyor... Kaderiniz belirlenecek!
+            </p>
         </div>
 
-        <!-- Balance Display -->
-        <div class="balance-bar">
-            <span class="balance-icon">💰</span>
-            <span class="balance-text" id="balance">1000₺</span>
+        <!-- Spin Button -->
+        <div class="relative flex flex-col items-center pb-2">
+            <button id="spin-button" class="w-48 group relative focus:outline-none transition-transform active:scale-95 touch-manipulation">
+                <div class="absolute inset-0 bg-[#b45309] rounded-full translate-y-2.5"></div> 
+                <div class="relative bg-gradient-to-b from-yellow-300 to-yellow-500 hover:from-yellow-200 hover:to-yellow-400 rounded-full py-4 border-[3px] border-[#78350f] shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] flex items-center justify-center">
+                    <span class="font-display text-2xl text-[#5D4037] uppercase tracking-wider font-black drop-shadow-sm">Çevir</span>
+                </div>
+            </button>
         </div>
 
-        <!-- Stats -->
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-label">Toplam</div>
-                <div class="stat-value" id="total-win">0₺</div>
+        <!-- Balance & Stats -->
+        <div class="mt-6 space-y-3">
+            <div class="bg-primary rounded-lg py-2 px-4 text-center border-2 border-primary-dark">
+                <span class="font-display text-white text-lg">Bakiye: <span id="balance">1000₺</span></span>
             </div>
-            <div class="stat">
-                <div class="stat-label">En Yüksek</div>
-                <div class="stat-value" id="highest-win">0₺</div>
-            </div>
-            <div class="stat">
-                <div class="stat-label">Çevirme</div>
-                <div class="stat-value" id="spin-count">0</div>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="bg-panel-bg-light dark:bg-panel-bg-dark rounded-lg p-2 text-center border-2 border-[#5D4037]">
+                    <div class="text-[10px] text-[#FFE082] font-bold uppercase">Toplam</div>
+                    <div class="text-primary font-bold" id="total-win">0₺</div>
+                </div>
+                <div class="bg-panel-bg-light dark:bg-panel-bg-dark rounded-lg p-2 text-center border-2 border-[#5D4037]">
+                    <div class="text-[10px] text-[#FFE082] font-bold uppercase">En Yüksek</div>
+                    <div class="text-primary font-bold" id="highest-win">0₺</div>
+                </div>
+                <div class="bg-panel-bg-light dark:bg-panel-bg-dark rounded-lg p-2 text-center border-2 border-[#5D4037]">
+                    <div class="text-[10px] text-[#FFE082] font-bold uppercase">Çevirme</div>
+                    <div class="text-primary font-bold" id="spin-count">0</div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Win Popup -->
-    <div class="win-popup" id="win-popup">
-        <div class="win-content">
-            <div class="win-icon" id="win-icon">🎉</div>
-            <div class="win-message" id="win-message">KAZANDINIZ!</div>
-            <div class="win-amount-big" id="win-amount-big">100₺</div>
-            <button class="continue-btn" id="continue-btn">Devam Et</button>
-        </div>
+<!-- Win Popup -->
+<div id="win-popup" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-gradient-to-b from-[#5D4037] to-[#3E2723] rounded-3xl border-4 border-primary p-8 max-w-sm w-full text-center shadow-2xl animate-bounce">
+        <div class="text-7xl mb-4" id="win-icon">🎉</div>
+        <h2 class="font-display text-3xl text-white mb-3" id="win-message">KAZANDINIZ!</h2>
+        <div class="text-5xl font-display text-primary mb-6" id="win-amount">100₺</div>
+        <button id="continue-btn" class="bg-primary hover:bg-primary-dark text-white font-display text-xl px-8 py-3 rounded-full border-2 border-primary-dark transition-all active:scale-95">
+            Devam Et
+        </button>
     </div>
+</div>
 
-    <script src="script.js"></script>
+<!-- Dark Mode Toggle -->
+<button class="fixed bottom-6 right-6 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 p-3 rounded-full shadow-xl z-50 hover:scale-110 transition-transform focus:outline-none border-2 border-white dark:border-slate-800" onclick="document.documentElement.classList.toggle('dark')">
+    <span class="material-icons-round dark:hidden">dark_mode</span>
+    <span class="material-icons-round hidden dark:inline">light_mode</span>
+</button>
+
+<script src="game.js"></script>
 </body>
 </html>
