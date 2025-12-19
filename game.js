@@ -20,8 +20,8 @@ const config = {
 
 // Symbols
 const symbols = {
-    '😇': { type: 'gold', weight: 18, title: 'Melek Gücü!' },
-    '😈': { type: 'diamond', weight: 15, title: 'Şeytan Gücü!' },
+    '🪙': { type: 'gold', weight: 18, title: 'Altın Bulundu!' },
+    '💎': { type: 'diamond', weight: 15, title: 'Pırlanta Bulundu!' },
     '💰': { type: 'money', weight: 8, value: 20, title: '20₺ Kazandınız!' },
     '💵': { type: 'money', weight: 6, value: 50, title: '50₺ Kazandınız!' },
     '💸': { type: 'money', weight: 4, value: 100, title: '100₺ Kazandınız!' },
@@ -213,28 +213,28 @@ async function calculateWinnings(symbol) {
         case 'gold':
             gameState.goldSlots++;
             updateProgressSlots('gold');
-            els.flavorText.textContent = '😇 Melek Gücü arttı! Devam edin...';
+            els.flavorText.textContent = '🪙 Altın bulundu! Devam edin...';
             
             if (gameState.goldSlots >= 3) {
                 totalWin += config.goldReward;
                 hasSpecial = true;
                 gameState.goldSlots = 0;
                 resetProgressSlots('gold');
-                els.flavorText.textContent = `✨ MELEK GÜCÜ TAMAMLANDI! ${config.goldReward}₺ kazandınız!`;
+                els.flavorText.textContent = `✨ ALTIN KAZANILDI! ${config.goldReward}₺ kazandınız!`;
             }
             break;
             
         case 'diamond':
             gameState.diamondSlots++;
             updateProgressSlots('diamond');
-            els.flavorText.textContent = '😈 Şeytan Gücü arttı! Devam edin...';
+            els.flavorText.textContent = '💎 Pırlanta bulundu! Devam edin...';
             
             if (gameState.diamondSlots >= 3) {
                 totalWin += config.diamondReward;
                 hasSpecial = true;
                 gameState.diamondSlots = 0;
                 resetProgressSlots('diamond');
-                els.flavorText.textContent = `🔥 ŞEYTAN GÜCÜ TAMAMLANDI! ${config.diamondReward}₺ kazandınız!`;
+                els.flavorText.textContent = `🔥 PIRLANTA KAZANILDI! ${config.diamondReward}₺ kazandınız!`;
             }
             break;
             
@@ -284,15 +284,21 @@ function updateProgressSlots(type) {
     console.log(`Found ${slots.length} ${type} slots`);
     
     const count = type === 'gold' ? gameState.goldSlots : gameState.diamondSlots;
-    const icon = type === 'gold' ? '😇' : '😈';
-    const bgClass = type === 'gold' ? 'bg-accent-angel' : 'bg-accent-demon';
+    const icon = type === 'gold' ? '🪙' : '💎';
+    const bgClass = type === 'gold' ? 'bg-gradient-to-br from-yellow-300 to-yellow-500' : 'bg-gradient-to-br from-cyan-300 to-blue-400';
     
     if (count > 0 && count <= 3) {
         const slot = slots[count - 1];
         if (slot) {
             console.log(`✅ Filling slot ${count} for ${type}`);
-            slot.classList.add(bgClass, 'border-white', 'filled', 'shadow-sm');
+            slot.classList.add('border-white', 'filled', 'shadow-sm');
             slot.classList.remove('bg-[#4E342E]', 'border-[#3E2723]');
+            // Add gradient background
+            if (type === 'gold') {
+                slot.classList.add('bg-gradient-to-br', 'from-yellow-300', 'to-yellow-500');
+            } else {
+                slot.classList.add('bg-gradient-to-br', 'from-cyan-300', 'to-blue-400');
+            }
             slot.innerHTML = `<span class="text-[10px] leading-none">${icon}</span>`;
         } else {
             console.error(`❌ Slot ${count} not found`);
@@ -311,12 +317,12 @@ function resetProgressSlots(type) {
     }
     
     const slots = container.querySelectorAll(`.${type}-slot`);
-    const bgClass = type === 'gold' ? 'bg-accent-angel' : 'bg-accent-demon';
     
     setTimeout(() => {
         slots.forEach((slot) => {
             // Clear all slots completely
-            slot.classList.remove(bgClass, 'border-white', 'filled', 'shadow-sm');
+            slot.classList.remove('border-white', 'filled', 'shadow-sm');
+            slot.classList.remove('bg-gradient-to-br', 'from-yellow-300', 'to-yellow-500', 'from-cyan-300', 'to-blue-400');
             slot.classList.add('bg-[#4E342E]', 'border-[#3E2723]');
             slot.innerHTML = '';
         });
@@ -414,7 +420,7 @@ function resetGame() {
     resetProgressSlots('diamond');
     
     updateDisplay();
-    updateResultDisplay('😈', 'Çarkı Çevir!', '#F472B6');
+    updateResultDisplay('🎰', 'Çarkı Çevir!', '#F472B6');
     els.flavorText.textContent = 'Yeni oyun başladı! İyi şanslar!';
 }
 
