@@ -20,17 +20,16 @@ const config = {
 
 // Symbols
 const symbols = {
-    '🪙': { type: 'gold', weight: 18, title: 'Altın Bulundu!' },
-    '💎': { type: 'diamond', weight: 15, title: 'Pırlanta Bulundu!' },
-    '💰': { type: 'money', weight: 8, value: 20, title: '20₺ Kazandınız!' },
-    '💵': { type: 'money', weight: 6, value: 50, title: '50₺ Kazandınız!' },
-    '💸': { type: 'money', weight: 4, value: 100, title: '100₺ Kazandınız!' },
-    '🏆': { type: 'money', weight: 2, value: 250, title: '250₺ Kazandınız!' },
-    '⚡': { type: 'multiplier', weight: 5, value: 0.3, title: 'Çarpan 0.3x' },
-    '✨': { type: 'multiplier', weight: 4, value: 0.6, title: 'Çarpan 0.6x' },
-    '⭐': { type: 'multiplier', weight: 3, value: 1.2, title: 'Çarpan 1.2x' },
-    '🌟': { type: 'multiplier', weight: 2, value: 2.3, title: 'Çarpan 2.3x' },
-    '❌': { type: 'empty', weight: 33, title: 'Tekrar Dene!' }
+    '🪙': { type: 'gold', weight: 18, title: 'Altın!' },
+    '💎': { type: 'diamond', weight: 15, title: 'Pırlanta!' },
+    '🔮': { type: 'magic', weight: 10, value: 20, title: 'Büyülü Küre (20₺)' },
+    '🌙': { type: 'money', weight: 8, value: 50, title: 'Ay Işığı (50₺)' },
+    '⭐': { type: 'money', weight: 6, value: 100, title: 'Kayan Yıldız (100₺)' },
+    '🌞': { type: 'money', weight: 4, value: 250, title: 'Güneş Patlaması (250₺)' },
+    '⚡': { type: 'multiplier', weight: 5, value: 0.3, title: 'Şimşek (0.3x)' },
+    '🌀': { type: 'multiplier', weight: 4, value: 0.6, title: 'Girdap (0.6x)' },
+    '✨': { type: 'multiplier', weight: 3, value: 1.2, title: 'Parıltı (1.2x)' },
+    '👾': { type: 'empty', weight: 30, title: 'Hiçlik...' }
 };
 
 const totalWeight = Object.values(symbols).reduce((sum, s) => sum + s.weight, 0);
@@ -40,78 +39,62 @@ const els = {
     spinButton: document.getElementById('spin-button'),
     betDisplay: document.getElementById('bet-display'),
     betInput: document.getElementById('bet-input'),
-    resultCircle: document.getElementById('result-circle'),
     resultSymbol: document.getElementById('result-symbol'),
     resultText: document.getElementById('result-text'),
     balance: document.getElementById('balance'),
     totalWin: document.getElementById('total-win'),
     highestWin: document.getElementById('highest-win'),
-    spinCount: document.getElementById('spin-count'),
     flavorText: document.getElementById('flavor-text'),
     winPopup: document.getElementById('win-popup'),
+    winPopupContent: document.getElementById('win-popup-content'),
     winIcon: document.getElementById('win-icon'),
     winMessage: document.getElementById('win-message'),
     winAmount: document.getElementById('win-amount'),
-    continueBtn: document.getElementById('continue-btn')
+    continueBtn: document.getElementById('continue-btn'),
+    goldProgress: document.getElementById('gold-progress'),
+    diamondProgress: document.getElementById('diamond-progress')
 };
 
 // Init
 function init() {
     updateDisplay();
-    
+
     els.spinButton.addEventListener('click', spin);
     document.getElementById('decrease-bet').addEventListener('click', () => adjustBet(-5));
     document.getElementById('increase-bet').addEventListener('click', () => adjustBet(5));
-    els.betInput.addEventListener('change', validateBet);
-    
+
     document.querySelectorAll('.quick-bet').forEach(btn => {
         btn.addEventListener('click', () => {
             gameState.currentBet = parseInt(btn.dataset.bet);
-            els.betInput.value = gameState.currentBet;
             updateDisplay();
             updateQuickBets();
         });
     });
-    
-    els.continueBtn.addEventListener('click', () => {
-        els.winPopup.classList.add('hidden');
-        els.winPopup.classList.remove('flex');
-    });
+
+    els.continueBtn.addEventListener('click', hideWinPopup);
 }
 
 // Adjust Bet
 function adjustBet(amount) {
     const newBet = gameState.currentBet + amount;
-    if (newBet >= config.minBet && newBet <= config.maxBet && newBet <= gameState.balance) {
+    if (newBet >= config.minBet && newBet <= config.maxBet && newBet <= gameState.balance + gameState.currentBet) { // Logic fix: check against potential balance
         gameState.currentBet = newBet;
-        els.betInput.value = newBet;
         updateDisplay();
         updateQuickBets();
     }
 }
 
-// Validate Bet
-function validateBet() {
-    let val = parseInt(els.betInput.value) || config.minBet;
-    val = Math.max(config.minBet, Math.min(val, config.maxBet, gameState.balance));
-    gameState.currentBet = val;
-    els.betInput.value = val;
-    updateDisplay();
-    updateQuickBets();
-}
-
-// Update Quick Bets
+// Update Quick Bets Visuals
 function updateQuickBets() {
     document.querySelectorAll('.quick-bet').forEach(btn => {
         const amount = parseInt(btn.dataset.bet);
         if (amount === gameState.currentBet) {
-            btn.classList.add('bg-primary', 'border-primary-dark', 'active-bet');
-            btn.classList.remove('bg-panel-bg-light', 'dark:bg-panel-bg-dark', 'border-[#5D4037]');
+            btn.classList.add('border-purple-500', 'bg-purple-500/20', 'text-white', 'shadow-[0_0_10px_rgba(124,58,237,0.3)]');
+            btn.classList.remove('border-white/5', 'bg-white/5', 'text-arcane-100');
         } else {
-            btn.classList.remove('bg-primary', 'border-primary-dark', 'active-bet');
-            btn.classList.add('bg-panel-bg-light', 'dark:bg-panel-bg-dark', 'border-[#5D4037]');
+            btn.classList.remove('border-purple-500', 'bg-purple-500/20', 'text-white', 'shadow-[0_0_10px_rgba(124,58,237,0.3)]');
+            btn.classList.add('border-white/5', 'bg-white/5', 'text-arcane-100');
         }
-        btn.disabled = amount > gameState.balance;
     });
 }
 
@@ -119,310 +102,257 @@ function updateQuickBets() {
 function getRandomSymbol() {
     const rand = Math.random() * totalWeight;
     let cumulative = 0;
-    
+
     for (const [symbol, config] of Object.entries(symbols)) {
         cumulative += config.weight;
         if (rand < cumulative) return symbol;
     }
-    
-    return '❌';
+    return '👾';
 }
 
-// Update Display
-function updateResultDisplay(symbol, text, bgColor = '#EF4444') {
-    els.resultSymbol.textContent = symbol;
-    els.resultText.textContent = text;
-    els.resultCircle.style.backgroundColor = bgColor;
-}
-
-// Spin Animation
-async function animateSpin(finalSymbol, duration = 2500) {
+// Advanced Spin Animation (Easing + RequestAnimationFrame)
+async function animateSpin(finalSymbol) {
     return new Promise(resolve => {
         const symbolKeys = Object.keys(symbols);
-        let elapsed = 0;
-        
-        // Add spinning class
-        els.resultCircle.style.animation = 'spin 0.5s linear infinite';
-        
-        const interval = setInterval(() => {
-            const randomSym = symbolKeys[Math.floor(Math.random() * symbolKeys.length)];
-            els.resultSymbol.textContent = randomSym;
-            
-            elapsed += 80;
-            if (elapsed >= duration) {
-                clearInterval(interval);
-                els.resultCircle.style.animation = '';
+        const duration = 2000; // ms
+        const startTime = performance.now();
+
+        // Easing function: Cubic Ease Out
+        // Allows start fast, end slow
+        const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+
+        let lastSymbolIndex = -1;
+        let lastUpdate = 0;
+        const baseInterval = 50; // Fastest speed in ms
+
+        function tick(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Calculate current interval based on progress (slowing down)
+            // Start at 50ms, end at 400ms
+            const currentInterval = baseInterval + (easeOutCubic(progress) * 350);
+
+            if (currentTime - lastUpdate > currentInterval) {
+                // Change Symbol
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * symbolKeys.length);
+                } while (newIndex === lastSymbolIndex);
+
+                lastSymbolIndex = newIndex;
+                els.resultSymbol.textContent = symbolKeys[newIndex];
+
+                // Add blur effect based on speed
+                if (progress < 0.8) {
+                    els.resultSymbol.style.filter = 'blur(2px)';
+                    els.resultSymbol.style.transform = 'scale(0.9) rotate(' + (Math.random() * 20 - 10) + 'deg)';
+                } else {
+                    els.resultSymbol.style.filter = 'blur(0px)';
+                    els.resultSymbol.style.transform = 'scale(1.1)';
+                }
+
+                lastUpdate = currentTime;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                // Finish
                 els.resultSymbol.textContent = finalSymbol;
+                els.resultSymbol.style.filter = 'none';
+                els.resultSymbol.style.transform = 'scale(1.2) rotate(0deg)';
+                gameState.isSpinning = false;
+
+                // Impact Effect
+                setTimeout(() => els.resultSymbol.style.transform = 'scale(1)', 200);
                 resolve();
             }
-        }, 80);
+        }
+
+        requestAnimationFrame(tick);
     });
 }
 
 // Main Spin
 async function spin() {
     if (gameState.isSpinning) return;
-    
+
     if (gameState.balance < gameState.currentBet) {
-        updateResultDisplay('⚠️', 'Yetersiz Bakiye!', '#DC2626');
-        els.flavorText.textContent = 'Daha düşük bir bahis seçin veya bakiye ekleyin.';
+        els.flavorText.textContent = 'Büyülü enerjin (bakiyen) tükendi!';
+        shakeElement(els.balance.parentElement);
         return;
     }
-    
+
     gameState.isSpinning = true;
-    els.spinButton.disabled = true;
-    els.spinButton.style.opacity = '0.5';
-    
     gameState.balance -= gameState.currentBet;
     gameState.spinCount++;
     updateDisplay();
-    
-    updateResultDisplay('🎰', 'Çevriliyor...', '#A855F7');
-    els.flavorText.textContent = 'Çark dönüyor... Şansınız yaver gitsin!';
-    
+
+    els.spinButton.disabled = true;
+    els.flavorText.textContent = 'Kozmos dönüyor...';
+
     const result = getRandomSymbol();
-    
-    await animateSpin(result, 2500);
-    
-    const symbolConfig = symbols[result];
-    const bgColors = {
-        'gold': '#67E8F9',
-        'diamond': '#F472B6',
-        'money': '#10B981',
-        'multiplier': '#F59E0B',
-        'empty': '#EF4444'
-    };
-    updateResultDisplay(result, symbolConfig.title, bgColors[symbolConfig.type]);
-    
-    await new Promise(resolve => setTimeout(resolve, 600));
-    await calculateWinnings(result);
-    
+
+    await animateSpin(result);
+
+    await handleResult(result);
+
     gameState.isSpinning = false;
     els.spinButton.disabled = false;
-    els.spinButton.style.opacity = '1';
     updateDisplay();
 }
 
-// Calculate Winnings
-async function calculateWinnings(symbol) {
-    let totalWin = 0;
-    let hasSpecial = false;
+async function handleResult(symbol) {
     const symbolConfig = symbols[symbol];
-    
-    switch (symbolConfig.type) {
-        case 'gold':
-            gameState.goldSlots++;
-            updateProgressSlots('gold');
-            els.flavorText.textContent = '🪙 Altın bulundu! Devam edin...';
-            
-            if (gameState.goldSlots >= 3) {
-                totalWin += config.goldReward;
-                hasSpecial = true;
-                gameState.goldSlots = 0;
-                resetProgressSlots('gold');
-                els.flavorText.textContent = `✨ ALTIN KAZANILDI! ${config.goldReward}₺ kazandınız!`;
-            }
-            break;
-            
-        case 'diamond':
-            gameState.diamondSlots++;
-            updateProgressSlots('diamond');
-            els.flavorText.textContent = '💎 Pırlanta bulundu! Devam edin...';
-            
-            if (gameState.diamondSlots >= 3) {
-                totalWin += config.diamondReward;
-                hasSpecial = true;
-                gameState.diamondSlots = 0;
-                resetProgressSlots('diamond');
-                els.flavorText.textContent = `🔥 PIRLANTA KAZANILDI! ${config.diamondReward}₺ kazandınız!`;
-            }
-            break;
-            
-        case 'money':
-            totalWin += symbolConfig.value;
-            els.flavorText.textContent = `💰 ${symbolConfig.value}₺ kazandınız!`;
-            break;
-            
-        case 'multiplier':
-            totalWin += Math.floor(gameState.currentBet * symbolConfig.value);
-            els.flavorText.textContent = `⚡ Çarpan ${symbolConfig.value}x = ${Math.floor(gameState.currentBet * symbolConfig.value)}₺`;
-            break;
-            
-        case 'empty':
-            els.flavorText.textContent = '❌ Bu sefer olmadı! Şansınızı tekrar deneyin.';
-            break;
-    }
-    
-    if (totalWin > 0) {
-        gameState.balance += totalWin;
-        gameState.totalWin += totalWin;
-        
-        if (totalWin > gameState.highestWin) {
-            gameState.highestWin = totalWin;
-        }
-        
-        if (hasSpecial || totalWin >= gameState.currentBet * 2) {
-            await new Promise(resolve => setTimeout(resolve, 800));
-            showWinPopup(totalWin, hasSpecial, symbol);
-        }
-    }
-    
-    updateDisplay();
-}
+    els.resultText.textContent = symbolConfig.title;
 
-// Update Progress Slots
-function updateProgressSlots(type) {
-    console.log(`🔄 Updating ${type} progress to ${type === 'gold' ? gameState.goldSlots : gameState.diamondSlots}`);
-    
-    const container = type === 'gold' ? document.getElementById('gold-progress') : document.getElementById('diamond-progress');
-    if (!container) {
-        console.error(`❌ Container not found for ${type}`);
-        return;
+    let winAmount = 0;
+    let isSpecial = false;
+
+    // reset visuals
+    els.resultSymbol.classList.remove('animate-pulse');
+
+    if (symbolConfig.type === 'gold') {
+        gameState.goldSlots++;
+        updateProgress('gold');
+        if (gameState.goldSlots >= 3) {
+            winAmount = config.goldReward;
+            isSpecial = true;
+            gameState.goldSlots = 0;
+            setTimeout(() => resetProgress('gold'), 1000);
+        }
+    } else if (symbolConfig.type === 'diamond') {
+        gameState.diamondSlots++;
+        updateProgress('diamond');
+        if (gameState.diamondSlots >= 3) {
+            winAmount = config.diamondReward;
+            isSpecial = true;
+            gameState.diamondSlots = 0;
+            setTimeout(() => resetProgress('diamond'), 1000);
+        }
+    } else if (symbolConfig.type === 'money' || symbolConfig.type === 'magic') {
+        winAmount = symbolConfig.value;
+    } else if (symbolConfig.type === 'multiplier') {
+        winAmount = Math.floor(gameState.currentBet * symbolConfig.value);
     }
-    
-    const slots = container.querySelectorAll(`.${type}-slot`);
-    console.log(`Found ${slots.length} ${type} slots`);
-    
-    const count = type === 'gold' ? gameState.goldSlots : gameState.diamondSlots;
-    const icon = type === 'gold' ? '🪙' : '💎';
-    const bgClass = type === 'gold' ? 'bg-gradient-to-br from-yellow-300 to-yellow-500' : 'bg-gradient-to-br from-cyan-300 to-blue-400';
-    
-    if (count > 0 && count <= 3) {
-        const slot = slots[count - 1];
-        if (slot) {
-            console.log(`✅ Filling slot ${count} for ${type}`);
-            slot.classList.add('border-white', 'filled', 'shadow-sm');
-            slot.classList.remove('bg-[#4E342E]', 'border-[#3E2723]');
-            // Add gradient background
-            if (type === 'gold') {
-                slot.classList.add('bg-gradient-to-br', 'from-yellow-300', 'to-yellow-500');
-            } else {
-                slot.classList.add('bg-gradient-to-br', 'from-cyan-300', 'to-blue-400');
-            }
-            slot.innerHTML = `<span class="text-[10px] leading-none">${icon}</span>`;
+
+    if (winAmount > 0) {
+        if (isSpecial || winAmount >= gameState.currentBet * 2) {
+            showWinPopup(winAmount, isSpecial);
         } else {
-            console.error(`❌ Slot ${count} not found`);
+            // Small win visual feedback
+            els.resultSymbol.classList.add('animate-pulse');
+        }
+
+        gameState.balance += winAmount;
+        gameState.totalWin += winAmount;
+        gameState.highestWin = Math.max(gameState.highestWin, winAmount);
+    } else {
+        els.flavorText.textContent = 'Boşlukta kayboldu... Tekrar dene.';
+    }
+}
+
+function updateProgress(type) {
+    const container = els[type + 'Progress'];
+    const slots = container.children;
+    const count = type === 'gold' ? gameState.goldSlots : gameState.diamondSlots;
+    const colorClass = type === 'gold' ? 'bg-yellow-400' : 'bg-cyan-400';
+    const shadowClass = type === 'gold' ? 'shadow-[0_0_10px_#facc15]' : 'shadow-[0_0_10px_#22d3ee]';
+
+    for (let i = 0; i < 3; i++) {
+        if (i < count) {
+            slots[i].className = `w-4 h-4 rounded-full ${colorClass} ${shadowClass} shadow-lg transition-all duration-300 scale-110`;
         }
     }
 }
 
-// Reset Progress Slots
-function resetProgressSlots(type) {
-    console.log(`🔄 Resetting ${type} progress slots`);
-    
-    const container = type === 'gold' ? document.getElementById('gold-progress') : document.getElementById('diamond-progress');
-    if (!container) {
-        console.error(`❌ Container not found for ${type}`);
-        return;
+function resetProgress(type) {
+    const container = els[type + 'Progress'];
+    const slots = container.children;
+    for (let i = 0; i < 3; i++) {
+        slots[i].className = 'w-4 h-4 rounded-full bg-white/5 border border-white/10 transition-all duration-300';
     }
-    
-    const slots = container.querySelectorAll(`.${type}-slot`);
-    
-    setTimeout(() => {
-        slots.forEach((slot) => {
-            // Clear all slots completely
-            slot.classList.remove('border-white', 'filled', 'shadow-sm');
-            slot.classList.remove('bg-gradient-to-br', 'from-yellow-300', 'to-yellow-500', 'from-cyan-300', 'to-blue-400');
-            slot.classList.add('bg-[#4E342E]', 'border-[#3E2723]');
-            slot.innerHTML = '';
-        });
-        console.log(`✅ Reset complete for ${type}`);
-    }, 3000);
 }
 
-// Show Win Popup
-function showWinPopup(amount, isSpecial, symbol) {
-    els.winAmount.textContent = `${amount}₺`;
-    
-    if (isSpecial) {
-        els.winIcon.textContent = symbol;
-        els.winMessage.textContent = 'GÜÇ TAMAMLANDI!';
-    } else if (amount >= gameState.currentBet * 5) {
-        els.winIcon.textContent = '🎊';
-        els.winMessage.textContent = 'BÜYÜK KAZANÇ!';
-    } else {
-        els.winIcon.textContent = '🎉';
-        els.winMessage.textContent = 'KAZANDINIZ!';
-    }
-    
+function showWinPopup(amount, isSpecial) {
+    els.winAmount.textContent = amount + '₺';
+    els.winMessage.textContent = isSpecial ? 'BÜYÜK GÜÇ!' : 'KAZANDINIZ!';
+
     els.winPopup.classList.remove('hidden');
     els.winPopup.classList.add('flex');
-    confetti();
+
+    // Trigger fade in
+    requestAnimationFrame(() => {
+        els.winPopup.classList.remove('opacity-0');
+        els.winPopupContent.classList.remove('scale-90');
+        els.winPopupContent.classList.add('scale-100');
+    });
+
+    createConfetti();
 }
 
-// Confetti
-function confetti() {
-    const colors = ['#fbbf24', '#d97706', '#67E8F9', '#F472B6'];
-    
-    for (let i = 0; i < 50; i++) {
-        setTimeout(() => {
-            const particle = document.createElement('div');
-            particle.style.position = 'fixed';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = '-10px';
-            particle.style.width = (8 + Math.random() * 8) + 'px';
-            particle.style.height = (8 + Math.random() * 8) + 'px';
-            particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            particle.style.borderRadius = '50%';
-            particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '9999';
-            particle.style.animation = `fall ${2 + Math.random() * 2}s linear`;
-            
-            document.body.appendChild(particle);
-            setTimeout(() => particle.remove(), 4000);
-        }, i * 20);
-    }
+function hideWinPopup() {
+    els.winPopup.classList.add('opacity-0');
+    els.winPopupContent.classList.remove('scale-100');
+    els.winPopupContent.classList.add('scale-90');
+
+    setTimeout(() => {
+        els.winPopup.classList.add('hidden');
+        els.winPopup.classList.remove('flex');
+    }, 300);
 }
 
-// Add spin animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes spin {
-        from { transform: rotate(0deg) scale(1.05); }
-        to { transform: rotate(360deg) scale(1.05); }
-    }
-`;
-document.head.appendChild(style);
-
-// Update Display
 function updateDisplay() {
     els.balance.textContent = Math.floor(gameState.balance) + '₺';
-    els.betDisplay.textContent = gameState.currentBet + '₺';
+    els.betDisplay.textContent = gameState.currentBet; // Fixed: removed extra symbol
     els.totalWin.textContent = Math.floor(gameState.totalWin) + '₺';
     els.highestWin.textContent = Math.floor(gameState.highestWin) + '₺';
-    els.spinCount.textContent = gameState.spinCount;
-    
-    els.spinButton.disabled = gameState.balance < gameState.currentBet || gameState.isSpinning;
-    
-    if (gameState.balance < config.minBet && !gameState.isSpinning) {
-        els.flavorText.textContent = '💔 Bakiyeniz bitti! Oyun sona erdi.';
-        setTimeout(() => {
-            if (confirm('Bakiyeniz bitti! Yeniden başlamak ister misiniz?')) {
-                resetGame();
-            }
-        }, 1000);
+}
+
+function shakeElement(element) {
+    element.animate([
+        { transform: 'translateX(0)' },
+        { transform: 'translateX(-5px)' },
+        { transform: 'translateX(5px)' },
+        { transform: 'translateX(0)' }
+    ], {
+        duration: 300,
+        iterations: 1
+    });
+}
+
+function createConfetti() {
+    const colors = ['#a855f7', '#ec4899', '#facc15', '#22d3ee'];
+
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: fixed;
+            left: ${50 + (Math.random() * 20 - 10)}%;
+            top: ${50 + (Math.random() * 20 - 10)}%;
+            width: ${Math.random() * 10 + 5}px;
+            height: ${Math.random() * 10 + 5}px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 100;
+        `;
+
+        document.body.appendChild(particle);
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 200 + 100;
+
+        particle.animate([
+            { transform: 'translate(0,0) scale(1)', opacity: 1 },
+            { transform: `translate(${Math.cos(angle) * velocity}px, ${Math.sin(angle) * velocity}px) scale(0)`, opacity: 0 }
+        ], {
+            duration: 1000 + Math.random() * 500,
+            easing: 'cubic-bezier(0, .9, .57, 1)'
+        }).onfinish = () => particle.remove();
     }
 }
 
-// Reset Game
-function resetGame() {
-    gameState.balance = 1000;
-    gameState.currentBet = 25;
-    gameState.goldSlots = 0;
-    gameState.diamondSlots = 0;
-    gameState.totalWin = 0;
-    gameState.highestWin = 0;
-    gameState.spinCount = 0;
-    
-    els.betInput.value = 25;
-    
-    resetProgressSlots('gold');
-    resetProgressSlots('diamond');
-    
-    updateDisplay();
-    updateResultDisplay('🎰', 'Çarkı Çevir!', '#F472B6');
-    els.flavorText.textContent = 'Yeni oyun başladı! İyi şanslar!';
-}
-
-// Initialize
+// Init Game
 window.addEventListener('DOMContentLoaded', init);
